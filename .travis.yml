@@ -1,0 +1,26 @@
+language: java
+
+sudo: false
+
+before_cache:
+- rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
+- rm -fr $HOME/.gradle/caches/*/plugin-resolution/
+
+cache:
+  directories:
+  - "$HOME/.gradle/caches"
+  - "$HOME/.gradle/wrapper"
+  - "$HOME/.m2/repository"
+
+jdk:
+- oraclejdk8
+
+addons:
+  apt:
+    packages:
+    - oracle-java8-installer
+
+notifications:
+  slack:
+    secure: kRM9wyid2y+Mx2Q0J7dbyU7aPB87dlTcw4Y9aEEB43gI1kw8RejkEsec03XdsWrce7+1JEMOp5KpNsz5C9MhkytHQ/c0aw/nTD98HpizbNnviAkRjrtC1us8bvkz3nNN/wsO/UM7Od9SWwSLY7SWYzW82+N7nO+pedSiizS0WWSDvhhU7vyJBye2Hd4fhYC2fXPFtj+Lfqz8ZSRqrS/zzQ7I68orlDuT0pUlKLI4TK6KdEe/U/ntmcN8l1CQMIrSydVu7ZRL0k+cVEhs8zuBrRgttes4pmXd71sFUTN6gdENQgTfeD18re9wpgUNJ05FwJaZocmOSJL5mhUeVCsnZF44FILitUq6o8AId0hldG7L3qVL5Yt/xuX8Q3sp/PANEYFinrUfmzffB0BZqzjj34RfZ5aDC+T5n3NhjQgJbIV3dk+6CVjbqh0mYFc1LvM3OtYJR6OfKklFUCrQI7GpUdVJSqsW2Qj89Zd29QLom99+4JQ6XrgGkr8f1a/qxACwQhMXynj+8yrBh2m4HaZebKWKM0WV96ep7ifCM/1LYkpyDLKunnXLKWKDs6nTcEhsl8nVythMJNzFJwzm5C5G8YJDXBx55XhTLC/CITl8eAh7la4yZ5zF2VQxJj6q2wiaip84hFPYwwA4YQ6WMruzMQiphpSnTFEfS+TxUx8xGuA=
+
