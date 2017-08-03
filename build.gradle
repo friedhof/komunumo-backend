@@ -26,7 +26,8 @@ repositories {
 dependencies {
     compile (
             "io.github.microutils:kotlin-logging:$kotlinLoggingVersion",
-            "org.jetbrains.ktor:ktor-core:$ktorVersion"
+            "org.jetbrains.ktor:ktor-core:$ktorVersion",
+            "org.jetbrains.ktor:ktor-netty:$ktorVersion"
     )
     testCompile (
             "io.kotlintest:kotlintest:$kotlinTestVersion"
