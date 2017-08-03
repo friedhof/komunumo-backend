@@ -1,6 +1,8 @@
 *Komunumo*
 ==========
 
+[![gitmoji](https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg)](https://gitmoji.carloscuesta.me)
+
 **Open Source Community Manager**
 
 *Copyright (C) 2017 Java User Group Switzerland*
