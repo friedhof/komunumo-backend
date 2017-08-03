@@ -1,7 +1,7 @@
 *Komunumo*
 ==========
 
-[![gitmoji](https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg)](https://gitmoji.carloscuesta.me)
+[![Build Status](https://travis-ci.org/komunumo/komunumo-server.svg?branch=master)](https://travis-ci.org/komunumo/komunumo-server) [![gitmoji](https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg)](https://gitmoji.carloscuesta.me)
 
 **Open Source Community Manager**
 
