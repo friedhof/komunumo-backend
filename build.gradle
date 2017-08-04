@@ -33,6 +33,12 @@ version "$komunumoVersion"
 
 apply plugin: 'kotlin'
 
+kotlin {
+    experimental {
+        coroutines 'enable'
+    }
+}
+
 repositories {
     mavenCentral()
 
