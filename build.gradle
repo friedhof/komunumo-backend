@@ -45,7 +45,9 @@ dependencies {
     compile (
             "io.github.microutils:kotlin-logging:$kotlinLoggingVersion",
             "org.jetbrains.ktor:ktor-core:$ktorVersion",
-            "org.jetbrains.ktor:ktor-netty:$ktorVersion"
+            "org.jetbrains.ktor:ktor-netty:$ktorVersion",
+            "org.slf4j:slf4j-api:$slf4jVersion",
+            "org.slf4j:slf4j-jdk14:$slf4jVersion"
     )
     testCompile (
             "io.kotlintest:kotlintest:$kotlinTestVersion"
