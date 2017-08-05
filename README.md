@@ -1,7 +1,7 @@
-*Komunumo*
-==========
+*Komunumo Backend*
+==================
 
-[![Build Status](https://travis-ci.org/komunumo/komunumo-server.svg?branch=master)](https://travis-ci.org/komunumo/komunumo-server) [![Stories in Ready](https://badge.waffle.io/komunumo/komunumo-server.png?label=ready&title=ready)](http://waffle.io/komunumo/komunumo-server) [![gitmoji](https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg)](https://gitmoji.carloscuesta.me)
+[![Build Status](https://travis-ci.org/komunumo/komunumo-backend.svg?branch=master)](https://travis-ci.org/komunumo/komunumo-backend) [![Stories in Ready](https://badge.waffle.io/komunumo/komunumo-backend.png?label=ready&title=ready)](http://waffle.io/komunumo/komunumo-backend) [![gitmoji](https://img.shields.io/badge/gitmoji-%20😜%20😍-FFDD67.svg)](https://gitmoji.carloscuesta.me)
 
 **Open Source Community Manager**
 
@@ -19,4 +19,5 @@ You should have received a copy of the GNU Affero General Public License along w
 
 ## Throughput
 
-[![Throughput Graph](https://graphs.waffle.io/komunumo/komunumo-server/throughput.svg)](https://waffle.io/komunumo/komunumo-server/metrics/throughput)
+[![Throughput Graph](https://graphs.waffle.io/komunumo/komunumo-backend/throughput.svg)](https://waffle.io/komunumo/komunumo-backend/metrics/throughput)
+
