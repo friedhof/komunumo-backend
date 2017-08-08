@@ -19,7 +19,6 @@ package ch.komunumo.server
 
 import ch.komunumo.server.authorization.Authorization
 import org.jetbrains.ktor.application.ApplicationCallPipeline
-import org.jetbrains.ktor.application.call
 import org.jetbrains.ktor.host.embeddedServer
 import org.jetbrains.ktor.http.ContentType
 import org.jetbrains.ktor.netty.Netty

@@ -39,9 +39,9 @@ class Authorization {
                     val claims = Jwts.parser()
                             .setSigningKey(signingKey)
                             .parseClaimsJws(token);
-                    val email = claims.body.get("email")
+                    val email = claims.body["email"]
                     if (email != null) {
-                        call.attributes.put(UserAttribute, email)
+                        call.attributes.put(UserAttribute, email.toString())
                         logger.info { "User with email '$email' successfully authorized." }
                         // TODO get user object and add it to the call attributes (instead of the email address)
                     }
