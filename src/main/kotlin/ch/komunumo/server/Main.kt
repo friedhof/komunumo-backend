@@ -19,6 +19,8 @@ package ch.komunumo.server
 
 import ch.komunumo.server.authorization.Authorization
 import org.jetbrains.ktor.application.ApplicationCallPipeline
+import org.jetbrains.ktor.application.install
+import org.jetbrains.ktor.gson.GsonSupport
 import org.jetbrains.ktor.host.embeddedServer
 import org.jetbrains.ktor.http.ContentType
 import org.jetbrains.ktor.netty.Netty
@@ -28,6 +30,9 @@ import org.jetbrains.ktor.routing.routing
 
 fun main(args: Array<String>) {
     embeddedServer(Netty, 8080) {
+        install(GsonSupport) {
+            setPrettyPrinting()
+        }
         intercept(ApplicationCallPipeline.Call) {
             Authorization.checkAuthorization(call)
         }
