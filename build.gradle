@@ -61,7 +61,6 @@ dependencies {
             "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion",
             "org.jetbrains.ktor:ktor-gson:$ktorVersion",
             "org.jetbrains.ktor:ktor-netty:$ktorVersion",
-            "org.slf4j:slf4j-api:$slf4jVersion",
             "org.slf4j:slf4j-jdk14:$slf4jVersion"
     )
     testCompile (
