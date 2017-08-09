@@ -26,13 +26,11 @@ import org.jetbrains.ktor.features.CallLogging
 import org.jetbrains.ktor.features.Compression
 import org.jetbrains.ktor.gson.GsonSupport
 import org.jetbrains.ktor.host.embeddedServer
-import org.jetbrains.ktor.http.ContentType
 import org.jetbrains.ktor.http.HttpStatusCode
 import org.jetbrains.ktor.netty.Netty
 import org.jetbrains.ktor.request.receive
 import org.jetbrains.ktor.response.header
 import org.jetbrains.ktor.response.respond
-import org.jetbrains.ktor.response.respondText
 import org.jetbrains.ktor.routing.get
 import org.jetbrains.ktor.routing.post
 import org.jetbrains.ktor.routing.routing
@@ -48,9 +46,6 @@ fun main(args: Array<String>) {
             Authorization.checkAuthorization(call)
         }
         routing {
-            get("/") {
-                call.respondText("Hello, world!", ContentType.Text.Html)
-            }
             get("/api/events") {
                 call.respond(EventService.getAllEvents())
             }
