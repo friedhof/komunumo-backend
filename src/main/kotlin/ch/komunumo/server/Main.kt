@@ -61,6 +61,21 @@ fun main(args: Array<String>) {
                 call.response.status(HttpStatusCode.Created)
                 call.respond("")
             }
+            get("/api/events/{id}") {
+                val id = call.parameters["id"]
+                if (id == null) {
+                    call.response.status(HttpStatusCode.BadRequest)
+                    call.respond("")
+                } else {
+                    val event = EventService.getEventById(id)
+                    if (event == null) {
+                        call.response.status(HttpStatusCode.NotFound)
+                        call.respond("")
+                    } else {
+                        call.respond(event)
+                    }
+                }
+            }
         }
     }.start(wait = true)
 }

@@ -33,4 +33,8 @@ object EventService {
         return events.values.toList();
     }
 
+    fun getEventById(id: String): Event? {
+        return events.get(id)
+    }
+
 }
