@@ -43,9 +43,6 @@ fun main(args: Array<String>) {
         install(GsonSupport) {
             setPrettyPrinting()
         }
-        intercept(ApplicationCallPipeline.Call) {
-            Authorization.checkAuthorization(call)
-        }
         install(Routing) {
             route("api") {
                 route("events") {
@@ -78,6 +75,9 @@ fun main(args: Array<String>) {
                     }
                 }
             }
+        }
+        intercept(ApplicationCallPipeline.Call) {
+            Authorization.checkAuthorization(call)
         }
     }.start(wait = true)
 }
