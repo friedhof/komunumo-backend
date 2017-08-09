@@ -31,9 +31,10 @@ import org.jetbrains.ktor.netty.Netty
 import org.jetbrains.ktor.request.receive
 import org.jetbrains.ktor.response.header
 import org.jetbrains.ktor.response.respond
+import org.jetbrains.ktor.routing.Routing
 import org.jetbrains.ktor.routing.get
 import org.jetbrains.ktor.routing.post
-import org.jetbrains.ktor.routing.routing
+import org.jetbrains.ktor.routing.route
 
 fun main(args: Array<String>) {
     embeddedServer(Netty, 8080) {
@@ -45,29 +46,35 @@ fun main(args: Array<String>) {
         intercept(ApplicationCallPipeline.Call) {
             Authorization.checkAuthorization(call)
         }
-        routing {
-            get("/api/events") {
-                call.respond(EventService.getAllEvents())
-            }
-            post("/api/events") {
-                val event = call.receive<Event>()
-                val id = EventService.addEvent(event)
-                call.response.header("Location", "/api/events/$id")
-                call.response.status(HttpStatusCode.Created)
-                call.respond("")
-            }
-            get("/api/events/{id}") {
-                val id = call.parameters["id"]
-                if (id == null) {
-                    call.response.status(HttpStatusCode.BadRequest)
-                    call.respond("")
-                } else {
-                    val event = EventService.getEventById(id)
-                    if (event == null) {
-                        call.response.status(HttpStatusCode.NotFound)
+        install(Routing) {
+            route("api") {
+                route("events") {
+                    get {
+                        call.respond(EventService.getAllEvents())
+                    }
+                    post {
+                        val event = call.receive<Event>()
+                        val id = EventService.addEvent(event)
+                        call.response.header("Location", "/api/events/$id")
+                        call.response.status(HttpStatusCode.Created)
                         call.respond("")
-                    } else {
-                        call.respond(event)
+                    }
+                    route("{id}") {
+                        get {
+                            val id = call.parameters["id"]
+                            if (id == null) {
+                                call.response.status(HttpStatusCode.BadRequest)
+                                call.respond("")
+                            } else {
+                                val event = EventService.getEventById(id)
+                                if (event == null) {
+                                    call.response.status(HttpStatusCode.NotFound)
+                                    call.respond("")
+                                } else {
+                                    call.respond(event)
+                                }
+                            }
+                        }
                     }
                 }
             }
