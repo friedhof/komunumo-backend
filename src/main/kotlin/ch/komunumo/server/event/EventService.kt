@@ -21,16 +21,16 @@ import java.util.UUID
 
 object EventService {
 
-    private val events: MutableList<Event> = mutableListOf()
-
-    fun getAllEvents(): List<Event> {
-        return events;
-    }
+    private val events: MutableMap<String, Event> = mutableMapOf()
 
     fun addEvent(event: Event): String {
         val id = UUID.randomUUID().toString()
-        events.add(event.copy(id = id))
+        events.put(id, event.copy(id = id))
         return id
+    }
+
+    fun getAllEvents(): List<Event> {
+        return events.values.toList();
     }
 
 }
