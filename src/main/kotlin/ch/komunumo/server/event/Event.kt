@@ -19,7 +19,7 @@ package ch.komunumo.server.event
 
 import java.time.LocalDateTime
 
-data class Event (val id: String,
+data class Event (val id: String?,
                   val title: String,
                   val subtitle: String,
                   val speaker: String,

@@ -18,6 +18,7 @@
 package ch.komunumo.server
 
 import ch.komunumo.server.authorization.Authorization
+import ch.komunumo.server.event.Event
 import ch.komunumo.server.event.EventService
 import org.jetbrains.ktor.application.ApplicationCallPipeline
 import org.jetbrains.ktor.application.install
@@ -26,10 +27,14 @@ import org.jetbrains.ktor.features.Compression
 import org.jetbrains.ktor.gson.GsonSupport
 import org.jetbrains.ktor.host.embeddedServer
 import org.jetbrains.ktor.http.ContentType
+import org.jetbrains.ktor.http.HttpStatusCode
 import org.jetbrains.ktor.netty.Netty
+import org.jetbrains.ktor.request.receive
+import org.jetbrains.ktor.response.header
 import org.jetbrains.ktor.response.respond
 import org.jetbrains.ktor.response.respondText
 import org.jetbrains.ktor.routing.get
+import org.jetbrains.ktor.routing.post
 import org.jetbrains.ktor.routing.routing
 
 fun main(args: Array<String>) {
@@ -48,6 +53,13 @@ fun main(args: Array<String>) {
             }
             get("/api/events") {
                 call.respond(EventService.getAllEvents())
+            }
+            post("/api/events") {
+                val event = call.receive<Event>()
+                val id = EventService.addEvent(event)
+                call.response.header("Location", "/api/events/$id")
+                call.response.status(HttpStatusCode.Created)
+                call.respond("")
             }
         }
     }.start(wait = true)
