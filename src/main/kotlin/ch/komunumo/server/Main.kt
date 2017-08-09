@@ -21,6 +21,7 @@ import ch.komunumo.server.authorization.Authorization
 import ch.komunumo.server.event.EventService
 import org.jetbrains.ktor.application.ApplicationCallPipeline
 import org.jetbrains.ktor.application.install
+import org.jetbrains.ktor.features.CallLogging
 import org.jetbrains.ktor.features.Compression
 import org.jetbrains.ktor.gson.GsonSupport
 import org.jetbrains.ktor.host.embeddedServer
@@ -34,6 +35,7 @@ import org.jetbrains.ktor.routing.routing
 fun main(args: Array<String>) {
     embeddedServer(Netty, 8080) {
         install(Compression)
+        install(CallLogging)
         install(GsonSupport) {
             setPrettyPrinting()
         }
