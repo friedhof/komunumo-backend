@@ -24,6 +24,7 @@ import org.jetbrains.ktor.application.ApplicationCallPipeline
 import org.jetbrains.ktor.application.install
 import org.jetbrains.ktor.features.CallLogging
 import org.jetbrains.ktor.features.Compression
+import org.jetbrains.ktor.features.DefaultHeaders
 import org.jetbrains.ktor.gson.GsonSupport
 import org.jetbrains.ktor.host.embeddedServer
 import org.jetbrains.ktor.http.HttpStatusCode
@@ -38,6 +39,7 @@ import org.jetbrains.ktor.routing.route
 
 fun main(args: Array<String>) {
     embeddedServer(Netty, 8080) {
+        install(DefaultHeaders)
         install(Compression)
         install(CallLogging)
         install(GsonSupport) {
