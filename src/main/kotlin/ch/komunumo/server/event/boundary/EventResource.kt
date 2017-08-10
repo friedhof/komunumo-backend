@@ -18,8 +18,10 @@
 package ch.komunumo.server.event.boundary
 
 import ch.komunumo.server.event.control.EventService
+import ch.komunumo.server.event.entity.Event
 import org.jetbrains.ktor.application.ApplicationCall
 import org.jetbrains.ktor.http.HttpStatusCode
+import org.jetbrains.ktor.request.receive
 import org.jetbrains.ktor.response.respond
 
 object EventResource {
@@ -28,6 +30,17 @@ object EventResource {
         val id = call.parameters["id"]!!
         try {
             call.respond(EventService.readById(id))
+        } catch (e: NoSuchElementException) {
+            call.response.status(HttpStatusCode.NotFound)
+            call.respond(id)
+        }
+    }
+
+    suspend fun handlePut(call: ApplicationCall) {
+        val id = call.parameters["id"]!!
+        val event = call.receive<Event>().copy(id = id)
+        try {
+            call.respond(EventService.update(event))
         } catch (e: NoSuchElementException) {
             call.response.status(HttpStatusCode.NotFound)
             call.respond(id)

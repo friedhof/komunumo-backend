@@ -31,6 +31,7 @@ import org.jetbrains.ktor.netty.Netty
 import org.jetbrains.ktor.routing.Routing
 import org.jetbrains.ktor.routing.get
 import org.jetbrains.ktor.routing.post
+import org.jetbrains.ktor.routing.put
 import org.jetbrains.ktor.routing.route
 
 fun main(args: Array<String>) {
@@ -53,6 +54,9 @@ fun main(args: Array<String>) {
                     route("{id}") {
                         get {
                             EventResource.handleGet(call)
+                        }
+                        put {
+                            EventResource.handlePut(call)
                         }
                     }
                 }

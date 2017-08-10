@@ -38,6 +38,13 @@ object EventService {
         return events.getValue(id)
     }
 
+    fun update(event: Event): Event {
+        val id = event.id ?: throw IllegalStateException("The event has no id!")
+        if (!events.containsKey(id)) {
+            throw NoSuchElementException("There is no event with the id $id!")
+        }
+        events.put(id, event)
+        return event;
     }
 
 }
