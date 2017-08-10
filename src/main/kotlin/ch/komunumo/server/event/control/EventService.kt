@@ -24,17 +24,17 @@ object EventService {
 
     private val events: MutableMap<String, Event> = mutableMapOf()
 
-    fun addEvent(event: Event): String {
+    fun create(event: Event): String {
         val id = UUID.randomUUID().toString()
         events.put(id, event.copy(id = id))
         return id
     }
 
-    fun getAllEvents(): List<Event> {
+    fun readAll(): List<Event> {
         return events.values.toList();
     }
 
-    fun getEventById(id: String): Event? {
+    fun readById(id: String): Event? {
         return events.get(id)
     }
 

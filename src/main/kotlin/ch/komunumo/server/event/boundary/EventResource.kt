@@ -30,7 +30,7 @@ object EventResource {
             call.response.status(HttpStatusCode.BadRequest)
             call.respond("")
         } else {
-            val event = EventService.getEventById(id)
+            val event = EventService.readById(id)
             if (event == null) {
                 call.response.status(HttpStatusCode.NotFound)
                 call.respond("")

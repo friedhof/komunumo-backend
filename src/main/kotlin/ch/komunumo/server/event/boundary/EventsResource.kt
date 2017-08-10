@@ -28,12 +28,12 @@ import org.jetbrains.ktor.response.respond
 object EventsResource {
 
     suspend fun handleGet(call: ApplicationCall) {
-        call.respond(EventService.getAllEvents())
+        call.respond(EventService.readAll())
     }
 
     suspend fun handlePost(call: ApplicationCall) {
         val event = call.receive<Event>()
-        val id = EventService.addEvent(event)
+        val id = EventService.create(event)
         call.response.header("Location", "/api/events/$id")
         call.response.status(HttpStatusCode.Created)
         call.respond("")
