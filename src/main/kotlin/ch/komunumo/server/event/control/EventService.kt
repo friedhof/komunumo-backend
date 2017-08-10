@@ -18,6 +18,7 @@
 package ch.komunumo.server.event.control
 
 import ch.komunumo.server.event.entity.Event
+import java.util.ConcurrentModificationException
 import java.util.UUID
 
 object EventService {
@@ -26,7 +27,8 @@ object EventService {
 
     fun create(event: Event): String {
         val id = UUID.randomUUID().toString()
-        events.put(id, event.copy(id = id))
+        val version = event.hashCode()
+        events.put(id, event.copy(id = id, version = version))
         return id
     }
 
@@ -40,11 +42,14 @@ object EventService {
 
     fun update(event: Event): Event {
         val id = event.id ?: throw IllegalStateException("The event has no id!")
-        if (!events.containsKey(id)) {
-            throw NoSuchElementException("There is no event with the id $id!")
+        val oldEvent = readById(id)
+        if (oldEvent.version != event.version) {
+            throw ConcurrentModificationException("The event with id '$id' was modified concurrently!")
         }
-        events.put(id, event)
-        return event;
+        val version = event.hashCode()
+        val newEvent = event.copy(id = id, version = version)
+        events.put(id, newEvent)
+        return newEvent;
     }
 
 }

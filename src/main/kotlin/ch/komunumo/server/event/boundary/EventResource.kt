@@ -23,6 +23,7 @@ import org.jetbrains.ktor.application.ApplicationCall
 import org.jetbrains.ktor.http.HttpStatusCode
 import org.jetbrains.ktor.request.receive
 import org.jetbrains.ktor.response.respond
+import java.util.ConcurrentModificationException
 
 object EventResource {
 
@@ -43,6 +44,9 @@ object EventResource {
             call.respond(EventService.update(event))
         } catch (e: NoSuchElementException) {
             call.response.status(HttpStatusCode.NotFound)
+            call.respond(id)
+        } catch (e: ConcurrentModificationException) {
+            call.response.status(HttpStatusCode.Conflict)
             call.respond(id)
         }
     }
