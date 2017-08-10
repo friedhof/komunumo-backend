@@ -3,7 +3,7 @@
 !.idea/runConfigurations/*
 build
 *.iml
-
+*.paw
 node_modules
 npm-debug.log
 /.gradle
