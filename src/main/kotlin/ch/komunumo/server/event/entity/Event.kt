@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.komunumo.server.event
+package ch.komunumo.server.event.entity
 
 import java.time.LocalDateTime
 

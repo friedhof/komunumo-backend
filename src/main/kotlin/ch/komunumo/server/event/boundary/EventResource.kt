@@ -15,26 +15,29 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.komunumo.server.event
+package ch.komunumo.server.event.boundary
 
-import java.util.UUID
+import ch.komunumo.server.event.control.EventService
+import org.jetbrains.ktor.application.ApplicationCall
+import org.jetbrains.ktor.http.HttpStatusCode
+import org.jetbrains.ktor.response.respond
 
-object EventService {
+object EventResource {
 
-    private val events: MutableMap<String, Event> = mutableMapOf()
-
-    fun addEvent(event: Event): String {
-        val id = UUID.randomUUID().toString()
-        events.put(id, event.copy(id = id))
-        return id
-    }
-
-    fun getAllEvents(): List<Event> {
-        return events.values.toList();
-    }
-
-    fun getEventById(id: String): Event? {
-        return events.get(id)
+    suspend fun handleGet(call: ApplicationCall) {
+        val id = call.parameters["id"]
+        if (id == null) {
+            call.response.status(HttpStatusCode.BadRequest)
+            call.respond("")
+        } else {
+            val event = EventService.getEventById(id)
+            if (event == null) {
+                call.response.status(HttpStatusCode.NotFound)
+                call.respond("")
+            } else {
+                call.respond(event)
+            }
+        }
     }
 
 }
