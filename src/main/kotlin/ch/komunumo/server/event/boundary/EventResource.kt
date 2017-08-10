@@ -25,18 +25,12 @@ import org.jetbrains.ktor.response.respond
 object EventResource {
 
     suspend fun handleGet(call: ApplicationCall) {
-        val id = call.parameters["id"]
-        if (id == null) {
-            call.response.status(HttpStatusCode.BadRequest)
-            call.respond("")
-        } else {
-            val event = EventService.readById(id)
-            if (event == null) {
-                call.response.status(HttpStatusCode.NotFound)
-                call.respond("")
-            } else {
-                call.respond(event)
-            }
+        val id = call.parameters["id"]!!
+        try {
+            call.respond(EventService.readById(id))
+        } catch (e: NoSuchElementException) {
+            call.response.status(HttpStatusCode.NotFound)
+            call.respond(id)
         }
     }
 
