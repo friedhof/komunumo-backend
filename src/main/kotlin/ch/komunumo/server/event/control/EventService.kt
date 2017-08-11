@@ -17,13 +17,19 @@
  */
 package ch.komunumo.server.event.control
 
+import ch.komunumo.server.PersistenceManager
 import ch.komunumo.server.event.entity.Event
 import java.util.ConcurrentModificationException
 import java.util.UUID
 
+
 object EventService {
 
-    private val events: MutableMap<String, Event> = mutableMapOf()
+    private val events: MutableMap<String, Event>
+
+    init {
+        events = PersistenceManager.createOrOpen("events", Event::class)
+    }
 
     fun create(event: Event): String {
         val id = UUID.randomUUID().toString()

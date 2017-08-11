@@ -17,6 +17,7 @@
  */
 package ch.komunumo.server.event.entity
 
+import java.io.Serializable
 import java.time.LocalDateTime
 
 data class Event (val id: String?,
@@ -28,4 +29,4 @@ data class Event (val id: String?,
                   val location: String,
                   val description: String,
                   val tags: Array<String>,
-                  val status: String)
+                  val status: String) : Serializable
