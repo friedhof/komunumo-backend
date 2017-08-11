@@ -28,7 +28,7 @@ object EventService {
     private val events: MutableMap<String, Event>
 
     init {
-        events = PersistenceManager.createOrOpen("events", Event::class)
+        events = PersistenceManager.createPersistedMap("events", Event::class)
     }
 
     fun create(event: Event): String {

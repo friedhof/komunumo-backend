@@ -33,7 +33,7 @@ object PersistenceManager {
     }
 
     @Suppress("UNCHECKED_CAST") // TODO talk to the mapDB developers for a better solution
-    fun <T : Serializable> createOrOpen(name: String, clazz: KClass<out T>): ConcurrentMap<String, T> {
+    fun <T : Serializable> createPersistedMap(name: String, clazz: KClass<out T>): ConcurrentMap<String, T> {
         return db.hashMap(name)
                 .keySerializer(Serializer.STRING)
                 .valueSerializer(Serializer.JAVA)
