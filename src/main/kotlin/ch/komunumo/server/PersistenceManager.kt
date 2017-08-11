@@ -17,19 +17,30 @@
  */
 package ch.komunumo.server
 
+import mu.KotlinLogging
 import org.mapdb.DB
 import org.mapdb.DBMaker
 import org.mapdb.Serializer
 import java.io.Serializable
+import java.nio.file.Paths
 import java.util.concurrent.ConcurrentMap
 import kotlin.reflect.KClass
 
 object PersistenceManager {
 
     private val db: DB
+    private val logger = KotlinLogging.logger {}
 
     init {
-        db = DBMaker.memoryDB().make()
+        val homeDir = System.getProperty("user.home")
+        val dbPath = Paths.get(homeDir, ".komunumo", "komunumo.db")
+        val dbFile = dbPath.toFile()
+        logger.info { "Using persistence store: $dbFile" }
+        db = DBMaker.fileDB(dbFile)
+                .fileMmapEnableIfSupported()
+                .transactionEnable()
+                .closeOnJvmShutdown()
+                .make()
     }
 
     @Suppress("UNCHECKED_CAST") // TODO talk to the mapDB developers for a better solution
