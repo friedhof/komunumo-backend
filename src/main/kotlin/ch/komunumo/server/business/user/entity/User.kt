@@ -19,8 +19,8 @@ package ch.komunumo.server.business.user.entity
 
 import java.io.Serializable
 
-data class User(val id: String?,
-                val version: Int?,
+data class User(val id: String? = null,
+                val version: Int? = 0,
                 val firstname: String,
                 val lastname: String,
                 val email: String,

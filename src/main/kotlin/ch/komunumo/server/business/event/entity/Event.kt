@@ -20,8 +20,8 @@ package ch.komunumo.server.business.event.entity
 import java.io.Serializable
 import java.time.LocalDateTime
 
-data class Event (val id: String?,
-                  val version: Int?,
+data class Event (val id: String? = null,
+                  val version: Int? = 0,
                   val title: String,
                   val subtitle: String,
                   val speaker: String,
