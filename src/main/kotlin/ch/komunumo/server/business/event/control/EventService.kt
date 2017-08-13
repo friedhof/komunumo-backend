@@ -19,8 +19,8 @@ package ch.komunumo.server.business.event.control
 
 import ch.komunumo.server.PersistenceManager
 import ch.komunumo.server.business.event.entity.Event
+import ch.komunumo.server.business.generateNewUniqueId
 import java.util.ConcurrentModificationException
-import java.util.UUID
 
 
 object EventService {
@@ -32,7 +32,7 @@ object EventService {
     }
 
     fun create(event: Event): String {
-        val id = UUID.randomUUID().toString()
+        val id = generateNewUniqueId(events.keys)
         val version = event.hashCode()
         events.put(id, event.copy(id = id, version = version))
         return id
