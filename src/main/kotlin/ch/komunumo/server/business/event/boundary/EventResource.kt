@@ -32,8 +32,7 @@ object EventResource {
         try {
             call.respond(EventService.readById(id))
         } catch (e: NoSuchElementException) {
-            call.response.status(HttpStatusCode.NotFound)
-            call.respond(id)
+            call.respond(HttpStatusCode.NotFound)
         }
     }
 
@@ -43,11 +42,9 @@ object EventResource {
         try {
             call.respond(EventService.update(event))
         } catch (e: NoSuchElementException) {
-            call.response.status(HttpStatusCode.NotFound)
-            call.respond(id)
+            call.respond(HttpStatusCode.NotFound)
         } catch (e: ConcurrentModificationException) {
-            call.response.status(HttpStatusCode.Conflict)
-            call.respond(id)
+            call.respond(HttpStatusCode.Conflict)
         }
     }
 

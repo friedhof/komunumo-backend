@@ -35,8 +35,7 @@ object EventsResource {
         val event = call.receive<Event>()
         val id = EventService.create(event)
         call.response.header("Location", "/api/events/$id")
-        call.response.status(HttpStatusCode.Created)
-        call.respond("")
+        call.respond(HttpStatusCode.Created)
     }
 
 }
