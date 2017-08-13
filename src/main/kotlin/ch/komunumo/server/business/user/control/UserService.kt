@@ -19,15 +19,38 @@ package ch.komunumo.server.business.user.control
 
 import ch.komunumo.server.PersistenceManager
 import ch.komunumo.server.business.generateNewUniqueId
+import ch.komunumo.server.business.user.entity.Role
+import ch.komunumo.server.business.user.entity.Status
 import ch.komunumo.server.business.user.entity.User
+import mu.KotlinLogging
 import java.util.ConcurrentModificationException
 
 object UserService {
 
     private val users: MutableMap<String, User>
+    private val logger = KotlinLogging.logger {}
 
     init {
         users = PersistenceManager.createPersistedMap("users", User::class)
+        createAdminUserFromEnvironment()
+    }
+
+    private fun createAdminUserFromEnvironment() {
+        val adminEmail = System.getenv("KOMUNUMO_ADMIN_EMAIL")
+        if (adminEmail.isNotBlank()) {
+            try {
+                val adminUser = User(
+                        firstname = "Admin",
+                        lastname = "Admin",
+                        email = adminEmail,
+                        role = Role.ADMIN,
+                        status = Status.ACTIVE)
+                val id = create(adminUser)
+                logger.info { "Created a new admin user with email '$adminEmail' and id '$id'!" }
+            } catch (e: IllegalArgumentException) {
+                logger.info { "Admin user with email '$adminEmail' is already existing." }
+            }
+        }
     }
 
     fun create(user: User): String {
