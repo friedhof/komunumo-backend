@@ -17,9 +17,9 @@
  */
 package ch.komunumo.server
 
-import ch.komunumo.server.authorization.Authorization
-import ch.komunumo.server.event.boundary.EventResource
-import ch.komunumo.server.event.boundary.EventsResource
+import ch.komunumo.server.business.authorization.Authorization
+import ch.komunumo.server.business.event.boundary.EventResource
+import ch.komunumo.server.business.event.boundary.EventsResource
 import org.jetbrains.ktor.application.ApplicationCallPipeline
 import org.jetbrains.ktor.application.install
 import org.jetbrains.ktor.features.CallLogging

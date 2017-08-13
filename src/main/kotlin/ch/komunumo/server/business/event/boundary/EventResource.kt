@@ -15,28 +15,40 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.komunumo.server.event.boundary
+package ch.komunumo.server.business.event.boundary
 
-import ch.komunumo.server.event.control.EventService
-import ch.komunumo.server.event.entity.Event
+import ch.komunumo.server.business.event.control.EventService
+import ch.komunumo.server.business.event.entity.Event
 import org.jetbrains.ktor.application.ApplicationCall
 import org.jetbrains.ktor.http.HttpStatusCode
 import org.jetbrains.ktor.request.receive
-import org.jetbrains.ktor.response.header
 import org.jetbrains.ktor.response.respond
+import java.util.ConcurrentModificationException
 
-object EventsResource {
+object EventResource {
 
     suspend fun handleGet(call: ApplicationCall) {
-        call.respond(EventService.readAll())
+        val id = call.parameters["id"]!!
+        try {
+            call.respond(EventService.readById(id))
+        } catch (e: NoSuchElementException) {
+            call.response.status(HttpStatusCode.NotFound)
+            call.respond(id)
+        }
     }
 
-    suspend fun handlePost(call: ApplicationCall) {
-        val event = call.receive<Event>()
-        val id = EventService.create(event)
-        call.response.header("Location", "/api/events/$id")
-        call.response.status(HttpStatusCode.Created)
-        call.respond("")
+    suspend fun handlePut(call: ApplicationCall) {
+        val id = call.parameters["id"]!!
+        val event = call.receive<Event>().copy(id = id)
+        try {
+            call.respond(EventService.update(event))
+        } catch (e: NoSuchElementException) {
+            call.response.status(HttpStatusCode.NotFound)
+            call.respond(id)
+        } catch (e: ConcurrentModificationException) {
+            call.response.status(HttpStatusCode.Conflict)
+            call.respond(id)
+        }
     }
 
 }

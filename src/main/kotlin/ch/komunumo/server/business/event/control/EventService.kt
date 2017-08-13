@@ -15,10 +15,10 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.komunumo.server.event.control
+package ch.komunumo.server.business.event.control
 
 import ch.komunumo.server.PersistenceManager
-import ch.komunumo.server.event.entity.Event
+import ch.komunumo.server.business.event.entity.Event
 import java.util.ConcurrentModificationException
 import java.util.UUID
 
