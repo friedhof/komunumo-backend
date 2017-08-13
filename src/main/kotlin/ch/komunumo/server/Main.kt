@@ -20,6 +20,8 @@ package ch.komunumo.server
 import ch.komunumo.server.business.authorization.Authorization
 import ch.komunumo.server.business.event.boundary.EventResource
 import ch.komunumo.server.business.event.boundary.EventsResource
+import ch.komunumo.server.business.user.boundary.UserResource
+import ch.komunumo.server.business.user.boundary.UsersResource
 import org.jetbrains.ktor.application.ApplicationCallPipeline
 import org.jetbrains.ktor.application.install
 import org.jetbrains.ktor.features.CallLogging
@@ -57,6 +59,22 @@ fun main(args: Array<String>) {
                         }
                         put {
                             EventResource.handlePut(call)
+                        }
+                    }
+                }
+                route("users") {
+                    get {
+                        UsersResource.handleGet(call)
+                    }
+                    post {
+                        UsersResource.handlePost(call)
+                    }
+                    route("{id}") {
+                        get {
+                            UserResource.handleGet(call)
+                        }
+                        put {
+                            UserResource.handlePut(call)
                         }
                     }
                 }
