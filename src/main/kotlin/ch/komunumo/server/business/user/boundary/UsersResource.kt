@@ -24,6 +24,7 @@ import org.jetbrains.ktor.http.HttpStatusCode
 import org.jetbrains.ktor.request.receive
 import org.jetbrains.ktor.response.header
 import org.jetbrains.ktor.response.respond
+import org.jetbrains.ktor.response.respondText
 
 object UsersResource {
 
@@ -33,9 +34,13 @@ object UsersResource {
 
     suspend fun handlePost(call: ApplicationCall) {
         val user = call.receive<User>()
-        val id = UserService.create(user)
-        call.response.header("Location", "/api/users/$id")
-        call.respond(HttpStatusCode.Created)
+        try {
+            val id = UserService.create(user)
+            call.response.header("Location", "/api/users/$id")
+            call.respond(HttpStatusCode.Created)
+        } catch (e: IllegalArgumentException) {
+            call.respondText(e.message.orEmpty(), status = HttpStatusCode.BadRequest)
+        }
     }
 
 }

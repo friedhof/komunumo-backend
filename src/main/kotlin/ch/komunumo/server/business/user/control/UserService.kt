@@ -31,10 +31,15 @@ object UserService {
     }
 
     fun create(user: User): String {
-        val id = generateNewUniqueId(users.keys)
-        val version = user.hashCode()
-        users.put(id, user.copy(id = id, version = version))
-        return id
+        try {
+            val email = readByEmail(user.email).email
+            throw IllegalArgumentException("There is already an user with email '$email'!")
+        } catch (e: NoSuchElementException) {
+            val id = generateNewUniqueId(users.keys)
+            val version = user.hashCode()
+            users.put(id, user.copy(id = id, version = version))
+            return id
+        }
     }
 
     fun readAll(): List<User> {
@@ -43,6 +48,13 @@ object UserService {
 
     fun readById(id: String): User {
         return users.getValue(id)
+    }
+
+    fun readByEmail(email: String) : User {
+        return users.values.stream()
+                .filter { user -> user.email == email }
+                .findFirst()
+                .orElseThrow { NoSuchElementException("No user with email '$email' found!") }
     }
 
     fun update(user: User): User {
