@@ -26,4 +26,3 @@ fun generateNewUniqueId(existingIds: Collection<String>) : String {
     } while (existingIds.contains(id))
     return id;
 }
-
