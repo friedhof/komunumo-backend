@@ -17,6 +17,7 @@
  */
 package ch.komunumo.server
 
+import ch.komunumo.server.business.authorization.boundary.AuthorizationResource
 import ch.komunumo.server.business.authorization.control.AuthorizationService
 import ch.komunumo.server.business.event.boundary.EventResource
 import ch.komunumo.server.business.event.boundary.EventsResource
@@ -46,6 +47,11 @@ fun main(args: Array<String>) {
         }
         install(Routing) {
             route("api") {
+                route("authorization") {
+                    get {
+                        AuthorizationResource.handleGet(call)
+                    }
+                }
                 route("events") {
                     get {
                         EventsResource.handleGet(call)
