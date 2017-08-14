@@ -25,10 +25,18 @@ import mu.KotlinLogging
 import org.jetbrains.ktor.application.ApplicationCall
 import org.jetbrains.ktor.request.header
 import org.jetbrains.ktor.util.AttributeKey
+import java.security.SecureRandom
+import java.time.LocalDateTime
 
 object AuthorizationService {
 
     val UserAttribute = AttributeKey<User>("user")
+
+    private val codeCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray()
+    private val minimalCodeLength = 5
+    private val maximumCodeLength = 10
+    private val thresholdForComplexityIncrease = 20
+    private val codeCache: MutableMap<String, OnetimeLoginCode> = mutableMapOf()
 
     private val signingKey = "This is a test!"
     private val logger = KotlinLogging.logger {}
@@ -57,4 +65,35 @@ object AuthorizationService {
         }
     }
 
+    fun sendOnetimeLoginCode(email: String) {
+        UserService.readByEmail(email, UserStatus.ACTIVE)
+        val code = generateCode()
+        val validUntil = LocalDateTime.now().plusMinutes(5)
+        val onetimeLoginCode = OnetimeLoginCode(email, code, validUntil)
+        codeCache.put(email, onetimeLoginCode)
+        // TODO send email with onetime login code
+        logger.info { onetimeLoginCode }
+    }
+
+    private fun generateCode(): String {
+        val requiredLength = currentlyRequiredChallengeLength()
+        val codeBuilder = StringBuilder(requiredLength)
+        val random = SecureRandom()
+        while (codeBuilder.length < requiredLength) {
+            val randomChar = codeCharacters.get(random.nextInt(codeCharacters.size))
+            codeBuilder.append(randomChar)
+        }
+        return codeBuilder.toString()
+    }
+
+    private fun currentlyRequiredChallengeLength(): Int {
+        val complexityIncrease = (codeCache.size / thresholdForComplexityIncrease)
+        val calculatedComplexity = minimalCodeLength + complexityIncrease
+        return Math.min(maximumCodeLength, calculatedComplexity)
+    }
+
 }
+
+private data class OnetimeLoginCode (val email: String,
+                                     val code: String,
+                                     val validUntil: LocalDateTime)
