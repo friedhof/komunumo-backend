@@ -17,7 +17,7 @@
  */
 package ch.komunumo.server
 
-import ch.komunumo.server.business.authorization.Authorization
+import ch.komunumo.server.business.authorization.control.AuthorizationService
 import ch.komunumo.server.business.event.boundary.EventResource
 import ch.komunumo.server.business.event.boundary.EventsResource
 import ch.komunumo.server.business.user.boundary.UserResource
@@ -81,7 +81,7 @@ fun main(args: Array<String>) {
             }
         }
         intercept(ApplicationCallPipeline.Call) {
-            Authorization.checkAuthorization(call)
+            AuthorizationService.intercept(call)
         }
     }.start(wait = true)
 }

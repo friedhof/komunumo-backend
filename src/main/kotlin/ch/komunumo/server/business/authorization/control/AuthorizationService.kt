@@ -15,7 +15,7 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  */
-package ch.komunumo.server.business.authorization
+package ch.komunumo.server.business.authorization.control
 
 import io.jsonwebtoken.Jwts
 import mu.KotlinLogging
@@ -23,7 +23,7 @@ import org.jetbrains.ktor.application.ApplicationCall
 import org.jetbrains.ktor.request.header
 import org.jetbrains.ktor.util.AttributeKey
 
-class Authorization {
+class AuthorizationService {
 
     companion object {
 
@@ -31,7 +31,7 @@ class Authorization {
         private val UserAttribute = AttributeKey<String>("user")
         private val logger = KotlinLogging.logger {}
 
-        fun checkAuthorization(call: ApplicationCall) {
+        fun intercept(call: ApplicationCall) {
             val authorization = call.request.header("Authorization")
             if (authorization != null && authorization.toLowerCase().startsWith("bearer")) {
                 val token = authorization.split(" ")[1]
