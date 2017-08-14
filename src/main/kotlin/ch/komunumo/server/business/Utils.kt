@@ -17,6 +17,11 @@
  */
 package ch.komunumo.server.business
 
+import ch.komunumo.server.business.authorization.control.AuthorizationService
+import ch.komunumo.server.business.user.entity.UserRole
+import org.jetbrains.ktor.application.ApplicationCall
+import org.jetbrains.ktor.http.HttpStatusCode
+import org.jetbrains.ktor.response.respond
 import java.util.UUID
 
 fun generateNewUniqueId(existingIds: Collection<String>) : String {
@@ -26,3 +31,13 @@ fun generateNewUniqueId(existingIds: Collection<String>) : String {
     } while (existingIds.contains(id))
     return id;
 }
+
+suspend fun authorizeAdmin(call: ApplicationCall) {
+    val user = call.attributes.getOrNull(AuthorizationService.UserAttribute)
+    if (user == null) {
+        call.respond(HttpStatusCode.Unauthorized)
+    } else if (user.role != UserRole.ADMIN) {
+        call.respond(HttpStatusCode.Forbidden)
+    }
+}
+

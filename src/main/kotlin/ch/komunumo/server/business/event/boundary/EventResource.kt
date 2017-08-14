@@ -17,6 +17,7 @@
  */
 package ch.komunumo.server.business.event.boundary
 
+import ch.komunumo.server.business.authorizeAdmin
 import ch.komunumo.server.business.event.control.EventService
 import ch.komunumo.server.business.event.entity.Event
 import org.jetbrains.ktor.application.ApplicationCall
@@ -37,6 +38,7 @@ object EventResource {
     }
 
     suspend fun handlePut(call: ApplicationCall) {
+        authorizeAdmin(call)
         val id = call.parameters["id"]!!
         val event = call.receive<Event>().copy(id = id)
         try {

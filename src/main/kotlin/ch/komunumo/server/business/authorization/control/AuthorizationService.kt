@@ -18,8 +18,8 @@
 package ch.komunumo.server.business.authorization.control
 
 import ch.komunumo.server.business.user.control.UserService
-import ch.komunumo.server.business.user.entity.UserStatus
 import ch.komunumo.server.business.user.entity.User
+import ch.komunumo.server.business.user.entity.UserStatus
 import io.jsonwebtoken.Jwts
 import mu.KotlinLogging
 import org.jetbrains.ktor.application.ApplicationCall
@@ -30,8 +30,9 @@ class AuthorizationService {
 
     companion object {
 
+        val UserAttribute = AttributeKey<User>("user")
+
         private val signingKey = "This is a test!"
-        private val UserAttribute = AttributeKey<User>("user")
         private val logger = KotlinLogging.logger {}
 
         fun intercept(call: ApplicationCall) {

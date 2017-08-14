@@ -17,6 +17,7 @@
  */
 package ch.komunumo.server.business.event.boundary
 
+import ch.komunumo.server.business.authorizeMember
 import ch.komunumo.server.business.event.control.EventService
 import ch.komunumo.server.business.event.entity.Event
 import org.jetbrains.ktor.application.ApplicationCall
@@ -32,6 +33,7 @@ object EventsResource {
     }
 
     suspend fun handlePost(call: ApplicationCall) {
+        authorizeMember(call)
         val event = call.receive<Event>()
         val id = EventService.create(event)
         call.response.header("Location", "/api/events/$id")
