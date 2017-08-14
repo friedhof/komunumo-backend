@@ -17,6 +17,9 @@
  */
 package ch.komunumo.server.business.authorization.control
 
+import ch.komunumo.server.business.user.control.UserService
+import ch.komunumo.server.business.user.entity.Status
+import ch.komunumo.server.business.user.entity.User
 import io.jsonwebtoken.Jwts
 import mu.KotlinLogging
 import org.jetbrains.ktor.application.ApplicationCall
@@ -28,7 +31,7 @@ class AuthorizationService {
     companion object {
 
         private val signingKey = "This is a test!"
-        private val UserAttribute = AttributeKey<String>("user")
+        private val UserAttribute = AttributeKey<User>("user")
         private val logger = KotlinLogging.logger {}
 
         fun intercept(call: ApplicationCall) {
@@ -39,11 +42,15 @@ class AuthorizationService {
                     val claims = Jwts.parser()
                             .setSigningKey(signingKey)
                             .parseClaimsJws(token);
-                    val email = claims.body["email"]
+                    val email = claims.body["email"] as String?
                     if (email != null) {
-                        call.attributes.put(UserAttribute, email.toString())
-                        logger.info { "User with email '$email' successfully authorized." }
-                        // TODO get user object and add it to the call attributes (instead of the email address)
+                        try {
+                            val user = UserService.readByEmail(email, Status.ACTIVE)
+                            call.attributes.put(UserAttribute, user)
+                            logger.info { "User with email '$email' successfully authorized." }
+                        } catch (e: NoSuchElementException) {
+                            logger.warn { e.message }
+                        }
                     }
                 } catch (e: Exception) {
                     logger.warn(e) { "Can't authorize the user with token '$token'!" }

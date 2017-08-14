@@ -80,6 +80,14 @@ object UserService {
                 .orElseThrow { NoSuchElementException("No user with email '$email' found!") }
     }
 
+    fun readByEmail(email: String, status: Status) : User {
+        val user = readByEmail(email);
+        if (user.status != status) {
+            throw NoSuchElementException("The user with email '$email' is not '$status'!")
+        }
+        return user
+    }
+
     fun update(user: User): User {
         val id = user.id ?: throw IllegalStateException("The user has no id!")
         val oldUser = readById(id)
