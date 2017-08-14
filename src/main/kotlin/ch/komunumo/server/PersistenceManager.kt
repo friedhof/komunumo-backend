@@ -20,10 +20,10 @@ package ch.komunumo.server
 import mu.KotlinLogging
 import org.mapdb.DB
 import org.mapdb.DBMaker
+import org.mapdb.HTreeMap
 import org.mapdb.Serializer
 import java.io.Serializable
 import java.nio.file.Paths
-import java.util.concurrent.ConcurrentMap
 import kotlin.reflect.KClass
 
 object PersistenceManager {
@@ -44,11 +44,69 @@ object PersistenceManager {
     }
 
     @Suppress("UNCHECKED_CAST") // TODO talk to the mapDB developers for a better solution
-    fun <T : Serializable> createPersistedMap(name: String, clazz: KClass<out T>): ConcurrentMap<String, T> {
-        return db.hashMap(name)
+    fun <T : Serializable> createPersistedMap(name: String, clazz: KClass<out T>): MutableMap<String, T> {
+        val hTreeMap = db.hashMap(name)
                 .keySerializer(Serializer.STRING)
                 .valueSerializer(Serializer.JAVA)
-                .createOrOpen() as ConcurrentMap<String, T>
+                .createOrOpen() as HTreeMap<String, T>
+        val autoCommitMap = AutoCommitMap<String, T>(db, hTreeMap)
+        return autoCommitMap
+    }
+
+}
+
+private class AutoCommitMap<K, V>(val db: DB, val map: HTreeMap<K, V>) : MutableMap<K, V> {
+
+    override val size: Int
+        get() = map.size
+
+    @Suppress("UNCHECKED_CAST")
+    override val entries: MutableSet<MutableMap.MutableEntry<K, V>>
+        get() = map.entries as MutableSet<MutableMap.MutableEntry<K, V>>
+
+    override val keys: MutableSet<K>
+        get() = map.keys
+
+    @Suppress("UNCHECKED_CAST")
+    override val values: MutableCollection<V>
+        get() = map.values as MutableCollection<V>
+
+    override fun containsKey(key: K): Boolean {
+        return map.containsKey(key)
+    }
+
+    override fun containsValue(value: V): Boolean {
+        return map.containsValue(value)
+    }
+
+    override fun get(key: K): V? {
+        return map.get(key)
+    }
+
+    override fun isEmpty(): Boolean {
+        return map.isEmpty()
+    }
+
+    override fun clear() {
+        map.clear()
+        db.commit()
+    }
+
+    override fun put(key: K, value: V): V? {
+        val oldValue = map.put(key, value)
+        db.commit()
+        return oldValue
+    }
+
+    override fun putAll(from: Map<out K, V>) {
+        map.putAll(from)
+        db.commit()
+    }
+
+    override fun remove(key: K): V? {
+        val oldValue = map.remove(key)
+        db.commit()
+        return oldValue
     }
 
 }
