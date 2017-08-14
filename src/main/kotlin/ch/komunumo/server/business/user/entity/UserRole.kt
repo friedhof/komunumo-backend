@@ -17,7 +17,7 @@
  */
 package ch.komunumo.server.business.user.entity
 
-enum class Role {
+enum class UserRole {
     ADMIN,
     MEMBER
 }

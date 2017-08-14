@@ -18,7 +18,7 @@
 package ch.komunumo.server.business.authorization.control
 
 import ch.komunumo.server.business.user.control.UserService
-import ch.komunumo.server.business.user.entity.Status
+import ch.komunumo.server.business.user.entity.UserStatus
 import ch.komunumo.server.business.user.entity.User
 import io.jsonwebtoken.Jwts
 import mu.KotlinLogging
@@ -45,7 +45,7 @@ class AuthorizationService {
                     val email = claims.body["email"] as String?
                     if (email != null) {
                         try {
-                            val user = UserService.readByEmail(email, Status.ACTIVE)
+                            val user = UserService.readByEmail(email, UserStatus.ACTIVE)
                             call.attributes.put(UserAttribute, user)
                             logger.info { "User with email '$email' successfully authorized." }
                         } catch (e: NoSuchElementException) {

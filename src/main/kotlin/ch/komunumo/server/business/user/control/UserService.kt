@@ -19,8 +19,8 @@ package ch.komunumo.server.business.user.control
 
 import ch.komunumo.server.PersistenceManager
 import ch.komunumo.server.business.generateNewUniqueId
-import ch.komunumo.server.business.user.entity.Role
-import ch.komunumo.server.business.user.entity.Status
+import ch.komunumo.server.business.user.entity.UserRole
+import ch.komunumo.server.business.user.entity.UserStatus
 import ch.komunumo.server.business.user.entity.User
 import mu.KotlinLogging
 import java.util.ConcurrentModificationException
@@ -43,8 +43,8 @@ object UserService {
                         firstname = "Admin",
                         lastname = "Admin",
                         email = adminEmail,
-                        role = Role.ADMIN,
-                        status = Status.ACTIVE)
+                        role = UserRole.ADMIN,
+                        status = UserStatus.ACTIVE)
                 val id = create(adminUser)
                 logger.info { "Created a new admin user with email '$adminEmail' and id '$id'!" }
             } catch (e: IllegalArgumentException) {
@@ -80,7 +80,7 @@ object UserService {
                 .orElseThrow { NoSuchElementException("No user with email '$email' found!") }
     }
 
-    fun readByEmail(email: String, status: Status) : User {
+    fun readByEmail(email: String, status: UserStatus) : User {
         val user = readByEmail(email);
         if (user.status != status) {
             throw NoSuchElementException("The user with email '$email' is not '$status'!")

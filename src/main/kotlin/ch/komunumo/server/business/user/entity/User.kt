@@ -24,5 +24,5 @@ data class User(val id: String? = null,
                 val firstname: String,
                 val lastname: String,
                 val email: String,
-                val role: Role,
-                val status: Status) : Serializable
+                val role: UserRole,
+                val status: UserStatus) : Serializable

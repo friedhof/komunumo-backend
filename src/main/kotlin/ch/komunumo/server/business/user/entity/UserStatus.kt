@@ -17,7 +17,7 @@
  */
 package ch.komunumo.server.business.user.entity
 
-enum class Status {
+enum class UserStatus {
     ACTIVE,
     INACTIVE
 }
