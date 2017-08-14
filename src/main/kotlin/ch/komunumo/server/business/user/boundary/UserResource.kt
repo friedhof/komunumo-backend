@@ -17,6 +17,7 @@
  */
 package ch.komunumo.server.business.user.boundary
 
+import ch.komunumo.server.business.authorizeMember
 import ch.komunumo.server.business.user.control.UserService
 import ch.komunumo.server.business.user.entity.User
 import org.jetbrains.ktor.application.ApplicationCall
@@ -29,6 +30,7 @@ object UserResource {
 
     suspend fun handleGet(call: ApplicationCall) {
         val id = call.parameters["id"]!!
+        authorizeMember(call, id)
         try {
             call.respond(UserService.readById(id))
         } catch (e: NoSuchElementException) {
@@ -38,6 +40,7 @@ object UserResource {
 
     suspend fun handlePut(call: ApplicationCall) {
         val id = call.parameters["id"]!!
+        authorizeMember(call, id)
         val user = call.receive<User>().copy(id = id)
         try {
             call.respond(UserService.update(user))

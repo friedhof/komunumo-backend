@@ -41,3 +41,13 @@ suspend fun authorizeAdmin(call: ApplicationCall) {
     }
 }
 
+suspend fun authorizeMember(call: ApplicationCall, userId: String? = null) {
+    val user = call.attributes.getOrNull(AuthorizationService.UserAttribute)
+    if (user == null) {
+        call.respond(HttpStatusCode.Unauthorized)
+    } else if (user.role != UserRole.MEMBER && user.role != UserRole.ADMIN) {
+        call.respond(HttpStatusCode.Forbidden)
+    } else if(user.role == UserRole.MEMBER && user.id != null && user.id != userId) {
+        call.respond(HttpStatusCode.Forbidden)
+    }
+}

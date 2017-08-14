@@ -17,6 +17,7 @@
  */
 package ch.komunumo.server.business.user.boundary
 
+import ch.komunumo.server.business.authorizeAdmin
 import ch.komunumo.server.business.user.control.UserService
 import ch.komunumo.server.business.user.entity.User
 import org.jetbrains.ktor.application.ApplicationCall
@@ -29,6 +30,7 @@ import org.jetbrains.ktor.response.respondText
 object UsersResource {
 
     suspend fun handleGet(call: ApplicationCall) {
+        authorizeAdmin(call)
         call.respond(UserService.readAll())
     }
 
