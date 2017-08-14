@@ -26,39 +26,35 @@ import org.jetbrains.ktor.application.ApplicationCall
 import org.jetbrains.ktor.request.header
 import org.jetbrains.ktor.util.AttributeKey
 
-class AuthorizationService {
+object AuthorizationService {
 
-    companion object {
+    val UserAttribute = AttributeKey<User>("user")
 
-        val UserAttribute = AttributeKey<User>("user")
+    private val signingKey = "This is a test!"
+    private val logger = KotlinLogging.logger {}
 
-        private val signingKey = "This is a test!"
-        private val logger = KotlinLogging.logger {}
-
-        fun intercept(call: ApplicationCall) {
-            val authorization = call.request.header("Authorization")
-            if (authorization != null && authorization.toLowerCase().startsWith("bearer")) {
-                val token = authorization.split(" ")[1]
-                try {
-                    val claims = Jwts.parser()
-                            .setSigningKey(signingKey)
-                            .parseClaimsJws(token);
-                    val email = claims.body["email"] as String?
-                    if (email != null) {
-                        try {
-                            val user = UserService.readByEmail(email, UserStatus.ACTIVE)
-                            call.attributes.put(UserAttribute, user)
-                            logger.info { "User with email '$email' successfully authorized." }
-                        } catch (e: NoSuchElementException) {
-                            logger.warn { e.message }
-                        }
+    fun intercept(call: ApplicationCall) {
+        val authorization = call.request.header("Authorization")
+        if (authorization != null && authorization.toLowerCase().startsWith("bearer")) {
+            val token = authorization.split(" ")[1]
+            try {
+                val claims = Jwts.parser()
+                        .setSigningKey(signingKey)
+                        .parseClaimsJws(token);
+                val email = claims.body["email"] as String?
+                if (email != null) {
+                    try {
+                        val user = UserService.readByEmail(email, UserStatus.ACTIVE)
+                        call.attributes.put(UserAttribute, user)
+                        logger.info { "User with email '$email' successfully authorized." }
+                    } catch (e: NoSuchElementException) {
+                        logger.warn { e.message }
                     }
-                } catch (e: Exception) {
-                    logger.warn(e) { "Can't authorize the user with token '$token'!" }
                 }
+            } catch (e: Exception) {
+                logger.warn(e) { "Can't authorize the user with token '$token'!" }
             }
         }
-
     }
 
 }
