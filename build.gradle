@@ -30,6 +30,9 @@ buildscript {
 
 apply plugin: 'java'
 apply plugin: 'kotlin'
+apply plugin: 'application'
+
+mainClassName = 'ch.komunumo.server.MainKt'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
