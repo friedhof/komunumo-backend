@@ -17,6 +17,7 @@
  */
 package ch.komunumo.server.business.authorization.control
 
+import ch.komunumo.server.business.sendEmail
 import ch.komunumo.server.business.user.control.UserService
 import ch.komunumo.server.business.user.entity.User
 import ch.komunumo.server.business.user.entity.UserStatus
@@ -36,7 +37,7 @@ object AuthorizationService {
     private val minimalCodeLength = 5
     private val maximumCodeLength = 10
     private val thresholdForComplexityIncrease = 20
-    private val codeCache: MutableMap<String, OnetimeLoginCode> = mutableMapOf()
+    private val codeCache: MutableMap<String, OnetimeLoginCode> = mutableMapOf() // TODO clear old entries
 
     private val signingKey = "This is a test!"
     private val logger = KotlinLogging.logger {}
@@ -71,8 +72,7 @@ object AuthorizationService {
         val validUntil = LocalDateTime.now().plusMinutes(5)
         val onetimeLoginCode = OnetimeLoginCode(email, code, validUntil)
         codeCache.put(email, onetimeLoginCode)
-        // TODO send email with onetime login code
-        logger.info { onetimeLoginCode }
+        sendEmail(email, "Komunumo One Time Login Code", "Your Code: " + code)
     }
 
     private fun generateCode(): String {
