@@ -18,7 +18,10 @@
 package ch.komunumo.server.business
 
 import ch.komunumo.server.business.authorization.control.AuthorizationService
+import ch.komunumo.server.business.configuration.control.ConfigurationService
 import ch.komunumo.server.business.user.entity.UserRole
+import org.apache.commons.mail.DefaultAuthenticator
+import org.apache.commons.mail.SimpleEmail
 import org.jetbrains.ktor.application.ApplicationCall
 import org.jetbrains.ktor.http.HttpStatusCode
 import org.jetbrains.ktor.response.respond
@@ -50,4 +53,17 @@ suspend fun authorizeMember(call: ApplicationCall, userId: String? = null) {
     } else if(user.role == UserRole.MEMBER && user.id != null && user.id != userId) {
         call.respond(HttpStatusCode.Forbidden)
     }
+}
+
+fun sendEmail(email: String, subject: String, text: String) {
+    val mail = SimpleEmail()
+    mail.setHostName(ConfigurationService.getSMTPServer())
+    mail.setSmtpPort(ConfigurationService.getSMTPPort())
+    mail.setAuthenticator(DefaultAuthenticator(ConfigurationService.getSMTPUser(), ConfigurationService.getSMTPPassword()))
+    mail.setSSLOnConnect(ConfigurationService.getSMTPSSL())
+    mail.setFrom(ConfigurationService.getSMTPFrom())
+    mail.setSubject(subject)
+    mail.setMsg(text)
+    mail.addTo(email)
+    mail.send()
 }
