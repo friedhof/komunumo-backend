@@ -66,6 +66,7 @@ dependencies {
     compile (
             "io.github.microutils:kotlin-logging:$kotlinLoggingVersion",
             "io.jsonwebtoken:jjwt:$jjwtVersion",
+            "org.apache.commons:commons-email:$apacheCommonsEmailVersion",
             "org.jetbrains.kotlin:kotlin-stdlib-jre8:$kotlinVersion",
             "org.jetbrains.ktor:ktor-gson:$ktorVersion",
             "org.jetbrains.ktor:ktor-netty:$ktorVersion",
