@@ -17,7 +17,7 @@
  */
 package ch.komunumo.server.business.event.boundary
 
-import ch.komunumo.server.business.authorizeMember
+import ch.komunumo.server.business.authorizeAdmin
 import ch.komunumo.server.business.configuration.control.ConfigurationService
 import ch.komunumo.server.business.event.control.EventService
 import ch.komunumo.server.business.event.entity.Event
@@ -40,7 +40,7 @@ object EventsResource {
     }
 
     suspend fun handlePost(call: ApplicationCall) {
-        authorizeMember(call)
+        authorizeAdmin(call)
         val event = call.receive<Event>()
         val id = EventService.create(event)
         call.response.header("Location", "${baseURL}/api/events/${id}")
