@@ -39,7 +39,7 @@ object AuthorizationService {
     private val thresholdForComplexityIncrease = 20
     private val codeCache: MutableMap<String, OnetimeLoginCode> = mutableMapOf() // TODO clear old entries
 
-    private val signingKey = "This is a test!"
+    private val signingKey = ConfigurationService.getTokenSigningKey()
     private val logger = KotlinLogging.logger {}
 
     fun intercept(call: ApplicationCall) {

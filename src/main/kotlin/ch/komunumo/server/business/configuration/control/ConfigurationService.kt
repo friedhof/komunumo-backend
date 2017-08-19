@@ -21,8 +21,6 @@ import java.io.FileInputStream
 import java.nio.file.Paths
 import java.util.Properties
 
-
-
 object ConfigurationService {
 
     private val configurationFilename = "komunumo.cfg"
@@ -52,6 +50,14 @@ object ConfigurationService {
 
     private fun getBoolean(key: String, default: Boolean): Boolean {
         return java.lang.Boolean.valueOf(getString(key, default.toString()))
+    }
+
+    fun getTokenSigningKey(): String {
+        return getString("token.signing.key", "")
+    }
+
+    fun getTokenExpirationTime() : Int {
+        return getInt("token.expiration.time", 60 * 24) // in minutes, default = 24h
     }
 
     fun getSMTPServer(): String {
