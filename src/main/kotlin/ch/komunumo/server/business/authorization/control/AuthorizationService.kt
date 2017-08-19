@@ -55,7 +55,7 @@ object AuthorizationService {
                     try {
                         val user = UserService.readByEmail(email, UserStatus.ACTIVE)
                         call.attributes.put(UserAttribute, user)
-                        logger.info { "User with email '$email' successfully authorized." }
+                        logger.info { "User with email '${email}' successfully authorized." }
                     } catch (e: NoSuchElementException) {
                         logger.warn { e.message }
                     }
@@ -72,7 +72,8 @@ object AuthorizationService {
         val validUntil = LocalDateTime.now().plusMinutes(5)
         val onetimeLoginCode = OnetimeLoginCode(email, code, validUntil)
         codeCache.put(email, onetimeLoginCode)
-        sendEmail(email, "Komunumo One Time Login Code", "Your Code: " + code)
+        sendEmail(email, "Komunumo One Time Login Code", "Your Code: ${code}")
+        logger.info { "Send onetime login code to user with email '${email}." }
     }
 
     private fun generateCode(): String {
