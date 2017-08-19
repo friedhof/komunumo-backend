@@ -18,6 +18,7 @@
 package ch.komunumo.server.business.event.boundary
 
 import ch.komunumo.server.business.authorizeMember
+import ch.komunumo.server.business.configuration.control.ConfigurationService
 import ch.komunumo.server.business.event.control.EventService
 import ch.komunumo.server.business.event.entity.Event
 import org.jetbrains.ktor.application.ApplicationCall
@@ -28,6 +29,12 @@ import org.jetbrains.ktor.response.respond
 
 object EventsResource {
 
+    private val baseURL: String
+
+    init {
+        baseURL = ConfigurationService.getServerBaseURL()
+    }
+
     suspend fun handleGet(call: ApplicationCall) {
         call.respond(EventService.readAll())
     }
@@ -36,7 +43,7 @@ object EventsResource {
         authorizeMember(call)
         val event = call.receive<Event>()
         val id = EventService.create(event)
-        call.response.header("Location", "/api/events/$id")
+        call.response.header("Location", "${baseURL}/api/events/${id}")
         call.respond(HttpStatusCode.Created)
     }
 

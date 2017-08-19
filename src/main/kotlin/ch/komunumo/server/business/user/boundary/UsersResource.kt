@@ -18,6 +18,7 @@
 package ch.komunumo.server.business.user.boundary
 
 import ch.komunumo.server.business.authorizeAdmin
+import ch.komunumo.server.business.configuration.control.ConfigurationService
 import ch.komunumo.server.business.user.control.UserService
 import ch.komunumo.server.business.user.entity.User
 import org.jetbrains.ktor.application.ApplicationCall
@@ -29,6 +30,12 @@ import org.jetbrains.ktor.response.respondText
 
 object UsersResource {
 
+    private val baseURL: String
+
+    init {
+        baseURL = ConfigurationService.getServerBaseURL()
+    }
+
     suspend fun handleGet(call: ApplicationCall) {
         authorizeAdmin(call)
         call.respond(UserService.readAll())
@@ -38,7 +45,7 @@ object UsersResource {
         val user = call.receive<User>()
         try {
             val id = UserService.create(user)
-            call.response.header("Location", "/api/users/$id")
+            call.response.header("Location", "${baseURL}/api/users/${id}")
             call.respond(HttpStatusCode.Created)
         } catch (e: IllegalArgumentException) {
             call.respondText(e.message.orEmpty(), status = HttpStatusCode.BadRequest)
