@@ -78,4 +78,8 @@ object ConfigurationService {
         return getString("smtp.from", System.getProperty("user.name") + "@localhost")
     }
 
+    fun getServerBaseURL(): String {
+        return getString("server.baseURL", "http://localhost:8080");
+    }
+
 }
