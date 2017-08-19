@@ -94,6 +94,3 @@ object AuthorizationService {
 
 }
 
-private data class OnetimeLoginCode (val email: String,
-                                     val code: String,
-                                     val validUntil: LocalDateTime)
