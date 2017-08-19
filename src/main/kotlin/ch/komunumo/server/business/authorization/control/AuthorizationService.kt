@@ -17,17 +17,22 @@
  */
 package ch.komunumo.server.business.authorization.control
 
+import ch.komunumo.server.business.authorization.entity.Challenge
+import ch.komunumo.server.business.authorization.entity.OnetimeLoginCode
+import ch.komunumo.server.business.configuration.control.ConfigurationService
 import ch.komunumo.server.business.sendEmail
 import ch.komunumo.server.business.user.control.UserService
 import ch.komunumo.server.business.user.entity.User
 import ch.komunumo.server.business.user.entity.UserStatus
 import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.SignatureAlgorithm
 import mu.KotlinLogging
 import org.jetbrains.ktor.application.ApplicationCall
 import org.jetbrains.ktor.request.header
 import org.jetbrains.ktor.util.AttributeKey
 import java.security.SecureRandom
 import java.time.LocalDateTime
+import java.util.Date
 
 object AuthorizationService {
 
@@ -93,5 +98,32 @@ object AuthorizationService {
         return Math.min(maximumCodeLength, calculatedComplexity)
     }
 
-}
+    fun getTokenForChallenge(challenge: Challenge): String {
+        val onetimeLoginCode = codeCache.getValue(challenge.email)
+        if (onetimeLoginCode.code == challenge.code && onetimeLoginCode.validUntil.isAfter(LocalDateTime.now())) {
+            logger.info { "User with email '${challenge.email}' successfully authorized." }
+            codeCache.remove(challenge.email)
+            return generateToken(challenge.email)
+        }
+        logger.warn { "Invalid authorization attempt from user with email '${challenge.email}'!" }
+        throw RuntimeException("Invalid authorization attempt from user with email '${challenge.email}'!")
+    }
 
+    private fun generateToken(email: String): String {
+        val tokenSigningKey = ConfigurationService.getTokenSigningKey()
+        val tokenExpirationTime = ConfigurationService.getTokenExpirationTime()
+
+        val now = Date()
+        val exp = Date(now.getTime() + tokenExpirationTime * 60 * 1000)
+        val claims = Jwts.claims()
+        claims.issuedAt = now
+        claims.expiration = exp
+        claims.put("email", email) //NON-NLS
+
+        return Jwts.builder()
+                .setClaims(claims)
+                .signWith(SignatureAlgorithm.HS512, tokenSigningKey)
+                .compact()
+    }
+
+}

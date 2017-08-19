@@ -54,6 +54,9 @@ fun main(args: Array<String>) {
                     get {
                         AuthorizationResource.handleGet(call)
                     }
+                    post {
+                        AuthorizationResource.handlePost(call)
+                    }
                 }
                 route("events") {
                     get {
