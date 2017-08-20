@@ -15,7 +15,7 @@ You should have received a copy of the GNU Affero General Public License along w
 
 ## The Name
 
-*Komunumo* is an esperanto noun with a meaning of *community*.
+*Komunumo* is an [esperanto](https://wikipedia.org/wiki/Esperanto) noun with a meaning of *community*.
 
 ## Throughput
 
