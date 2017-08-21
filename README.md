@@ -17,6 +17,20 @@ You should have received a copy of the GNU Affero General Public License along w
 
 *Komunumo* is an [esperanto](https://wikipedia.org/wiki/Esperanto) noun with a meaning of *community*.
 
+## Installation
+
+### From Source
+
+To install *Komunumo* from source, you need to have [git](https://git-scm.com) and [Java](https://www.oracle.com/technetwork/java/javase/downloads) 8 or newer installed.
+
+1. Clone this repository to your computer: `git clone https://github.com/komunumo/komunumo-backend.git`
+2. Enter the newly created project directory: `cd komunumo-backend`
+3. Build the artifact from source: `./gradlew assemble`
+4. The artifact can be found in the following directory: `build/libs`
+5. Place your configuration file in the directory: `~/.komunumo`
+6. Start the artifact: `./gradlew run`
+7. To stop the running server, press: `CTRL+C`
+
 ## Configuration
 
 In your home directory create a new directory with the name `.komunumo` (yes, the name of the directory starts with a dot, which hides the directory on unix systems by default). Inside of this directory create a text file with the name `komunumo.cfg` which you can use to configure *Komunumo*. This configuration file can contain as many empty lines and comments (lines starting with a `#` character) as you like.
