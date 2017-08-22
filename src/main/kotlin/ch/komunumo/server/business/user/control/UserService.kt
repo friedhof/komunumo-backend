@@ -19,9 +19,9 @@ package ch.komunumo.server.business.user.control
 
 import ch.komunumo.server.PersistenceManager
 import ch.komunumo.server.business.generateNewUniqueId
+import ch.komunumo.server.business.user.entity.User
 import ch.komunumo.server.business.user.entity.UserRole
 import ch.komunumo.server.business.user.entity.UserStatus
-import ch.komunumo.server.business.user.entity.User
 import mu.KotlinLogging
 import java.util.ConcurrentModificationException
 
@@ -37,7 +37,7 @@ object UserService {
 
     private fun createAdminUserFromEnvironment() {
         val adminEmail = System.getenv("KOMUNUMO_ADMIN_EMAIL")
-        if (adminEmail.isNotBlank()) {
+        if (adminEmail != null && adminEmail.isNotBlank()) {
             try {
                 val adminUser = User(
                         firstname = "Admin",
@@ -50,6 +50,8 @@ object UserService {
             } catch (e: IllegalArgumentException) {
                 logger.info { "Admin user with email '$adminEmail' is already existing." }
             }
+        } else {
+            logger.warn { "Skipping admin user creation." }
         }
     }
 
