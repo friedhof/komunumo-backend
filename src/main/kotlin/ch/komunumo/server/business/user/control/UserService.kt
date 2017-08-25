@@ -51,7 +51,7 @@ object UserService {
                 logger.info { "Admin user with email '$adminEmail' is already existing." }
             }
         } else {
-            logger.warn { "Skipping admin user creation." }
+            logger.info { "Skipping admin user creation." }
         }
     }
 
