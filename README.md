@@ -21,15 +21,24 @@ You should have received a copy of the GNU Affero General Public License along w
 
 ### From Source
 
-To install *Komunumo* from source, you need to have [git](https://git-scm.com) and [Java](https://www.oracle.com/technetwork/java/javase/downloads) 8 or newer installed.
+#### Prerequisites
+
+- [git](https://git-scm.com)
+- [Java](https://www.oracle.com/technetwork/java/javase/downloads) 8 or newer
+
+#### Build
 
 1. Clone this repository to your computer: `git clone https://github.com/komunumo/komunumo-backend.git`
 2. Enter the newly created project directory: `cd komunumo-backend`
 3. Build the artifact from source: `./gradlew assemble`
 4. The artifact can be found in the following directory: `build/libs`
-5. Place your configuration file in the directory: `~/.komunumo`
-6. Start the artifact: `./gradlew run`
-7. To stop the running server, press: `CTRL+C`
+
+#### Run
+
+1. Place your [configuration file](#configuration) in the directory: `~/.komunumo`
+2. Start the artifact: `./gradlew run`
+3. To stop the running server, press: `CTRL+C`
+
 
 ## Configuration
 
