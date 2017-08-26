@@ -60,7 +60,7 @@ object AuthorizationService {
                     try {
                         val user = UserService.readByEmail(email, UserStatus.ACTIVE)
                         call.attributes.put(UserAttribute, user)
-                        logger.info { "User with email '${email}' successfully authorized." }
+                        logger.trace { "User with email '${email}' successfully authorized." }
                     } catch (e: NoSuchElementException) {
                         logger.warn { e.message }
                     }
