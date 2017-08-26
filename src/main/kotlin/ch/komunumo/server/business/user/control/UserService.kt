@@ -18,6 +18,7 @@
 package ch.komunumo.server.business.user.control
 
 import ch.komunumo.server.PersistenceManager
+import ch.komunumo.server.business.configuration.control.ConfigurationService
 import ch.komunumo.server.business.generateNewUniqueId
 import ch.komunumo.server.business.user.entity.User
 import ch.komunumo.server.business.user.entity.UserRole
@@ -32,33 +33,30 @@ object UserService {
 
     init {
         users = PersistenceManager.createPersistedMap("users", User::class)
-        createAdminUserFromEnvironment()
+        createAdminUserFromConfiguration()
     }
 
-    private fun createAdminUserFromEnvironment() {
-        val adminEmail = System.getenv("KOMUNUMO_ADMIN_EMAIL")
-        if (adminEmail != null && adminEmail.isNotBlank()) {
+    private fun createAdminUserFromConfiguration() {
+        if (ConfigurationService.getAdminEmail().isNotBlank()) {
             try {
                 val adminUser = User(
-                        firstname = "Admin",
-                        lastname = "Admin",
-                        email = adminEmail,
+                        firstname = ConfigurationService.getAdminFirstname(),
+                        lastname = ConfigurationService.getAdminLastname(),
+                        email = ConfigurationService.getAdminEmail(),
                         role = UserRole.ADMIN,
                         status = UserStatus.ACTIVE)
-                val id = create(adminUser)
-                logger.info { "Created a new admin user with email '$adminEmail' and id '$id'!" }
+                create(adminUser)
+                logger.info { "Admin user successfully created." }
             } catch (e: IllegalArgumentException) {
-                logger.info { "Admin user with email '$adminEmail' is already existing." }
+                logger.info { "Admin user already exists." }
             }
-        } else {
-            logger.info { "Skipping admin user creation." }
         }
     }
 
     fun create(user: User): String {
         try {
             val email = readByEmail(user.email).email
-            throw IllegalArgumentException("There is already an user with email '$email'!")
+            throw IllegalArgumentException("There is already an user with email '${email}'!")
         } catch (e: NoSuchElementException) {
             val id = generateNewUniqueId(users.keys)
             val version = user.hashCode()

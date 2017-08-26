@@ -60,6 +60,18 @@ object ConfigurationService {
         return getInt("token.expiration.time", 60 * 24) // in minutes, default = 24h
     }
 
+    fun getAdminFirstname(): String {
+        return getString("admin.firstname", "")
+    }
+
+    fun getAdminLastname(): String {
+        return getString("admin.lastname", "Admin")
+    }
+
+    fun getAdminEmail(): String {
+        return getString("admin.email", "root@localhost")
+    }
+
     fun getSMTPServer(): String {
         return getString("smtp.server", "localhost")
     }
