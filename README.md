@@ -39,6 +39,25 @@ You should have received a copy of the GNU Affero General Public License along w
 2. Start the artifact: `./gradlew run`
 3. To stop the running server, press: `CTRL+C`
 
+### Using Docker
+
+#### Prerequisites
+
+- [Docker](https://www.docker.com)
+
+#### Command Line
+
+`docker run -it -p [localport]:8080 -v [datadir]:/root/.komunumo --name komunumo --rm komunumo/komunumo-backend`
+
+Replace `[localport]` with the port number you would like to assign to your running *Komunumo*  backend server and replace `[datadir]` with the directory on your local drive that contains the *Komunumo*  backend [configuration file](#configuration). This directory will be used to store the business data, too.
+
+We suggest to start the *Komunumo* backend server using the `-it` and `--rm` command line parameters to activate the interactive mode (you will see all logging output directkly at the console) and to remove the container after the server was shut down. It is always a good idea to assign a descriptive name to the container (`--name`).
+
+#### Example
+
+`docker run -it -p 8080:8080 -v ~/.komunumo:/root/.komunumo --name komunumo --rm komunumo/komunumo-backend`
+
+This command uses the local port `8080` for the *Komunumo* backend server. The [configuration file](#configuration) is located in the folder `~/.komunumo` which will be used to store the business data, too. The server will be started in interactive mode (`-it`), so all logging output will be shown directly on the console and the server can stopped using `Ctrl+C` at any time. The running container will have the name `komunumo` so it easy to identify if you run a lot of docker containers (`--name`). The container will be automatically removed after the *Komunumo* backend server was shut down (`--rm`).
 
 ## Configuration
 
