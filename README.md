@@ -88,6 +88,39 @@ server.baseURL = https://mydomain.com
 
 Most configuration options are self-descriptive. The `token.signing.key` is just text like a password which is used to sign the JSON Web Token with a private key. The `token.expiration.time` is a number specifying the time a JSON Web Token is valid until it expires (in minutes, 480 minutes are 8 hours = about 8 hours after a successful authorization the user has to authorize again). The `server.baseURL` is used as a prefix for automatically generated links like in the `Location` header of a response and in emails.
 
+## API Documentation
+
+### Authorization
+
+*Komunumo* uses a passwordless login system. An email address has to be specified where a onetime login code will be send to, which is valid for five minutes. The user must authorize himself with his email and the generated onetime login code to get a JSON web token (JWT), which is valid for eight hours. The JWT has to be send with every request which needs authentication.
+
+#### Request a onetime login code
+
+Request: `curl -X GET ${baseURL}/api/authorization?email=${email}`
+
+Example: `curl -X GET https://mydomain.com/api/authorization?email=foo.bar@mydomain.com`
+
+The onetime login code will be send by email and is valid for five minutes.
+
+| Response | Description |
+| --- | ---|
+| 200 OK | The ontime login code was sent successfully. |
+| 400 BAD REQUEST | The request itself was not valid. Maybe the email address was missing? |
+| 404 NOT FOUND | There is no user with the sprecified email address. |
+
+#### Authorize using onetime login code
+
+Request: `curl -X POST -H 'Content-Type: application/json; charset=utf-8' -d '{"email":"${email}","code":"${code}"}' ${baseURL}/api/authorization`
+
+Example: `curl -X POST -H 'Content-Type: application/json; charset=utf-8' -d '{"email":"foo.bar@mydomain.com","code":"5IJWX"}' https://mydomain.com/api/authorization`
+
+To authorize successfully an email address and a valid onetime login code is needed. After successful authorization the response contains the JSON web token in the `Authorization` header.
+
+| Response | Description |
+| --- | ---|
+| 201 CREATED | The JSON web token was created. Take a look at the `Authorization` header. |
+| 401 UNAUTHORIZED | The user could not be authorized using the specified credentials. |
+
 ## Throughput
 
 [![Throughput Graph](https://graphs.waffle.io/komunumo/komunumo-backend/throughput.svg)](https://waffle.io/komunumo/komunumo-backend/metrics/throughput)
