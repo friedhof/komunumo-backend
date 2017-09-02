@@ -25,11 +25,13 @@ import ch.komunumo.server.business.user.boundary.UserResource
 import ch.komunumo.server.business.user.boundary.UsersResource
 import org.jetbrains.ktor.application.ApplicationCallPipeline
 import org.jetbrains.ktor.application.install
+import org.jetbrains.ktor.features.CORS
 import org.jetbrains.ktor.features.CallLogging
 import org.jetbrains.ktor.features.Compression
 import org.jetbrains.ktor.features.DefaultHeaders
 import org.jetbrains.ktor.gson.GsonSupport
 import org.jetbrains.ktor.host.embeddedServer
+import org.jetbrains.ktor.http.HttpMethod
 import org.jetbrains.ktor.netty.Netty
 import org.jetbrains.ktor.routing.Routing
 import org.jetbrains.ktor.routing.get
@@ -42,6 +44,17 @@ fun main(args: Array<String>) {
         install(DefaultHeaders)
         install(Compression)
         install(CallLogging)
+        install(CORS) {
+            method(HttpMethod.Post)
+            method(HttpMethod.Get)
+            method(HttpMethod.Put)
+            method(HttpMethod.Delete)
+            method(HttpMethod.Head)
+            method(HttpMethod.Options)
+            header("Authorization")
+            header("Location")
+            anyHost()
+        }
         install(GsonSupport) {
             setPrettyPrinting()
         }
