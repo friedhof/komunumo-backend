@@ -121,6 +121,23 @@ To authorize successfully an email address and a valid onetime login code is nee
 | 201 CREATED | The JSON web token was created. Take a look at the `Authorization` header. |
 | 401 UNAUTHORIZED | The user could not be authorized using the specified credentials. |
 
+### Event
+
+#### Create a new event
+
+Request: `curl -X POST -H 'Content-Type: application/json; charset=utf-8' -d '{"title":"${title}","subtitle":"${subtitle}","speaker":"${speaker}","dateTime":{"date":{"year":${year},"month":${month},"day":${day}},"time":{"hour":${hour},"minute":${minute},"second":${second},"nano":${nano}}},"location":"${location}","description":"${description}","tags":["${tag}"],"status":"${status}"}' ${baseURL}/api/events`
+
+Example: `curl -X POST -H 'Content-Type: application/json; charset=utf-8' -d '{"title":"This is a test event","subtitle":"Foobar","speaker":"Me","dateTime":{"date":{"year":2017,"month":9,"day":15},"time":{"hour":18,"minute":15,"second":0,"nano":0}},"location":"There","description":"This is a test","tags":["test","foobar"],"status":"draft"}' https://mydomain.com/api/events`
+
+An authorized user with the admin role can create a new event. After a successful event creation, the response contains a `Location` header with a direct link to the created event.
+
+| Response | Description |
+| --- | ---|
+| 201 CREATED | The event was created. Take a look at the `Location` header. |
+| 400 BAD REQUEST | The request itself was not valid. Maybe missing properties or wrong formatting? |
+| 401 UNAUTHORIZED | The user has to authorize before he can create an event. |
+| 403 FORBIDDEN | The user has not the correct role to create an event. |
+
 ## Throughput
 
 [![Throughput Graph](https://graphs.waffle.io/komunumo/komunumo-backend/throughput.svg)](https://waffle.io/komunumo/komunumo-backend/metrics/throughput)
