@@ -1,10 +1,28 @@
-.idea/*
-!.idea/runConfigurations
-!.idea/runConfigurations/*
+# Gradle cache
+.gradle
+
+# Build artefacts
+bin
 build
+out
+
+# OS files
+.DS_Store
+$RECYCLE.BIN
+[Dd]esktop.ini
+Thumbs.db
+*.lnk
+
+# IntelliJ IDEA project files
 *.iml
+*.iws
+*.ipr
+.idea
+
+# Eclipse project file
+.settings
+.classpath
+.project
+
+# Paw project files
 *.paw
-node_modules
-npm-debug.log
-/.gradle
-/out
