@@ -70,8 +70,8 @@ token.signing.key = very secret text
 token.expiration.time = 480
 
 # Administrator
-admin.firstname = John
-admin.lastname = Doe
+admin.firstName = John
+admin.lastName = Doe
 admin.email = john.doe@mydomain.com
 
 # SMTP Server information

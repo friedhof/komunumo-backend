@@ -40,8 +40,8 @@ object UserService {
         if (ConfigurationService.getAdminEmail().isNotBlank()) {
             try {
                 val adminUser = User(
-                        firstname = ConfigurationService.getAdminFirstname(),
-                        lastname = ConfigurationService.getAdminLastname(),
+                        firstName = ConfigurationService.getAdminFirstname(),
+                        lastName = ConfigurationService.getAdminLastname(),
                         email = ConfigurationService.getAdminEmail(),
                         role = UserRole.ADMIN,
                         status = UserStatus.ACTIVE)
