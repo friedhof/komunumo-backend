@@ -38,10 +38,11 @@ object AuthorizationService {
 
     val UserAttribute = AttributeKey<User>("user")
 
+    private const val minimalCodeLength = 5
+    private const val maximumCodeLength = 10
+    private const val thresholdForComplexityIncrease = 20
+
     private val codeCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray()
-    private val minimalCodeLength = 5
-    private val maximumCodeLength = 10
-    private val thresholdForComplexityIncrease = 20
     private val codeCache: MutableMap<String, OnetimeLoginCode> = mutableMapOf() // TODO clear old entries
 
     private val signingKey = ConfigurationService.getTokenSigningKey()
@@ -54,7 +55,7 @@ object AuthorizationService {
             try {
                 val claims = Jwts.parser()
                         .setSigningKey(signingKey)
-                        .parseClaimsJws(token);
+                        .parseClaimsJws(token)
                 val email = claims.body["email"] as String?
                 if (email != null) {
                     try {
@@ -76,7 +77,7 @@ object AuthorizationService {
         val code = generateCode()
         val validUntil = LocalDateTime.now().plusMinutes(5)
         val onetimeLoginCode = OnetimeLoginCode(email, code, validUntil)
-        codeCache.put(email, onetimeLoginCode)
+        codeCache[email] = onetimeLoginCode
         sendEmail(email, "Komunumo One Time Login Code", "Your Code: ${code}")
         logger.info { "Send onetime login code to user with email '${email}." }
     }
@@ -86,7 +87,7 @@ object AuthorizationService {
         val codeBuilder = StringBuilder(requiredLength)
         val random = SecureRandom()
         while (codeBuilder.length < requiredLength) {
-            val randomChar = codeCharacters.get(random.nextInt(codeCharacters.size))
+            val randomChar = codeCharacters[random.nextInt(codeCharacters.size)]
             codeBuilder.append(randomChar)
         }
         return codeBuilder.toString()
@@ -114,11 +115,11 @@ object AuthorizationService {
         val tokenExpirationTime = ConfigurationService.getTokenExpirationTime()
 
         val now = Date()
-        val exp = Date(now.getTime() + tokenExpirationTime * 60 * 1000)
+        val exp = Date(now.time + tokenExpirationTime * 60 * 1000)
         val claims = Jwts.claims()
         claims.issuedAt = now
         claims.expiration = exp
-        claims.put("email", email) //NON-NLS
+        claims["email"] = email //NON-NLS
 
         return Jwts.builder()
                 .setClaims(claims)
