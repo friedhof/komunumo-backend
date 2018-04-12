@@ -23,7 +23,7 @@ import java.util.Properties
 
 object ConfigurationService {
 
-    private val configurationFilename = "komunumo.cfg"
+    private const val configurationFilename = "komunumo.cfg"
 
     private val properties: Properties
 
@@ -61,11 +61,11 @@ object ConfigurationService {
     }
 
     fun getAdminFirstname(): String {
-        return getString("admin.firstname", "")
+        return getString("admin.firstName", "")
     }
 
     fun getAdminLastname(): String {
-        return getString("admin.lastname", "Admin")
+        return getString("admin.lastName", "Admin")
     }
 
     fun getAdminEmail(): String {
@@ -97,7 +97,7 @@ object ConfigurationService {
     }
 
     fun getServerBaseURL(): String {
-        return getString("server.baseURL", "http://localhost:8080");
+        return getString("server.baseURL", "http://localhost:8080")
     }
 
 }
