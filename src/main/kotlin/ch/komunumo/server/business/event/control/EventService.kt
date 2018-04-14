@@ -25,21 +25,17 @@ import java.util.ConcurrentModificationException
 
 object EventService {
 
-    private val events: MutableMap<String, Event>
-
-    init {
-        events = PersistenceManager.createPersistedMap("events", Event::class)
-    }
+    private val events: MutableMap<String, Event> = PersistenceManager.createPersistedMap("events")
 
     fun create(event: Event): String {
         val id = generateNewUniqueId(events.keys)
         val version = event.hashCode()
-        events.put(id, event.copy(id = id, version = version))
+        events[id] = event.copy(id = id, version = version)
         return id
     }
 
     fun readAll(): List<Event> {
-        return events.values.toList();
+        return events.values.toList()
     }
 
     fun readById(id: String): Event {
@@ -54,8 +50,8 @@ object EventService {
         }
         val version = event.hashCode()
         val newEvent = event.copy(id = id, version = version)
-        events.put(id, newEvent)
-        return newEvent;
+        events[id] = newEvent
+        return newEvent
     }
 
 }
