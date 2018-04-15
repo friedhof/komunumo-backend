@@ -30,11 +30,7 @@ import org.jetbrains.ktor.response.respondText
 
 object UsersResource {
 
-    private val baseURL: String
-
-    init {
-        baseURL = ConfigurationService.getServerBaseURL()
-    }
+    private val baseURL: String = ConfigurationService.getServerBaseURL()
 
     suspend fun handleGet(call: ApplicationCall) {
         authorizeAdmin(call)
