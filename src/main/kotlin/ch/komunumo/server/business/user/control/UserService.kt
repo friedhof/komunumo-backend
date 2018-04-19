@@ -28,11 +28,10 @@ import java.util.ConcurrentModificationException
 
 object UserService {
 
-    private val users: MutableMap<String, User>
+    private val users: MutableMap<String, User> = PersistenceManager.createPersistedMap("users")
     private val logger = KotlinLogging.logger {}
 
     init {
-        users = PersistenceManager.createPersistedMap("users", User::class)
         createAdminUserFromConfiguration()
     }
 
@@ -60,13 +59,13 @@ object UserService {
         } catch (e: NoSuchElementException) {
             val id = generateNewUniqueId(users.keys)
             val version = user.hashCode()
-            users.put(id, user.copy(id = id, version = version))
+            users[id] = user.copy(id = id, version = version)
             return id
         }
     }
 
     fun readAll(): List<User> {
-        return users.values.toList();
+        return users.values.toList()
     }
 
     fun readById(id: String): User {
@@ -81,7 +80,7 @@ object UserService {
     }
 
     fun readByEmail(email: String, status: UserStatus) : User {
-        val user = readByEmail(email);
+        val user = readByEmail(email)
         if (user.status != status) {
             throw NoSuchElementException("The user with email '$email' is not '$status'!")
         }
@@ -96,8 +95,8 @@ object UserService {
         }
         val version = user.hashCode()
         val newUser = user.copy(id = id, version = version)
-        users.put(id, newUser)
-        return newUser;
+        users[id] = newUser
+        return newUser
     }
 
 }
