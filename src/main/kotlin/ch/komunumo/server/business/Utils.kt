@@ -32,7 +32,7 @@ fun generateNewUniqueId(existingIds: Collection<String>) : String {
     do {
         id = UUID.randomUUID().toString()
     } while (existingIds.contains(id))
-    return id;
+    return id
 }
 
 suspend fun authorizeAdmin(call: ApplicationCall) {
@@ -57,12 +57,12 @@ suspend fun authorizeMember(call: ApplicationCall, userId: String? = null) {
 
 fun sendEmail(email: String, subject: String, text: String) {
     val mail = SimpleEmail()
-    mail.setHostName(ConfigurationService.getSMTPServer())
+    mail.hostName = ConfigurationService.getSMTPServer()
     mail.setSmtpPort(ConfigurationService.getSMTPPort())
     mail.setAuthenticator(DefaultAuthenticator(ConfigurationService.getSMTPUser(), ConfigurationService.getSMTPPassword()))
-    mail.setSSLOnConnect(ConfigurationService.getSMTPSSL())
+    mail.isSSLOnConnect = ConfigurationService.getSMTPSSL()
     mail.setFrom(ConfigurationService.getSMTPFrom())
-    mail.setSubject(subject)
+    mail.subject = subject
     mail.setMsg(text)
     mail.addTo(email)
     mail.send()
