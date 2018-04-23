@@ -24,7 +24,6 @@ import org.mapdb.HTreeMap
 import org.mapdb.Serializer
 import java.io.Serializable
 import java.nio.file.Paths
-import kotlin.reflect.KClass
 
 object PersistenceManager {
 
@@ -44,13 +43,12 @@ object PersistenceManager {
     }
 
     @Suppress("UNCHECKED_CAST") // TODO talk to the mapDB developers for a better solution
-    fun <T : Serializable> createPersistedMap(name: String, clazz: KClass<out T>): MutableMap<String, T> {
+    fun <T : Serializable> createPersistedMap(name: String): MutableMap<String, T> {
         val hTreeMap = db.hashMap(name)
                 .keySerializer(Serializer.STRING)
                 .valueSerializer(Serializer.JAVA)
                 .createOrOpen() as HTreeMap<String, T>
-        val autoCommitMap = AutoCommitMap<String, T>(db, hTreeMap)
-        return autoCommitMap
+        return AutoCommitMap(db, hTreeMap)
     }
 
 }
@@ -80,7 +78,7 @@ private class AutoCommitMap<K, V>(val db: DB, val map: HTreeMap<K, V>) : Mutable
     }
 
     override fun get(key: K): V? {
-        return map.get(key)
+        return map[key]
     }
 
     override fun isEmpty(): Boolean {
