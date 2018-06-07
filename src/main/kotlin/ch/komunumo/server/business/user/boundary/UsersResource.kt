@@ -38,6 +38,7 @@ object UsersResource {
     }
 
     suspend fun handlePost(call: ApplicationCall) {
+        authorizeAdmin(call)
         val user = call.receive<User>()
         try {
             val id = UserService.create(user)
