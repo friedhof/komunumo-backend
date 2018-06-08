@@ -24,5 +24,8 @@ Thumbs.db
 .classpath
 .project
 
+# VS Code project files
+.vscode
+
 # Paw project files
 *.paw
