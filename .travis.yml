@@ -24,10 +24,7 @@ addons:
     - oracle-java8-installer
 
 after_success:
-  - docker build -t komunumo/komunumo-backend .
-  - docker login -u $DOCKER_USER -p $DOCKER_PASS
-  - docker push komunumo/komunumo-backend
-  - docker logout
+  - ./deploy
   - ./gradlew dependencyUpdates -Drevision=release
 
 notifications:
