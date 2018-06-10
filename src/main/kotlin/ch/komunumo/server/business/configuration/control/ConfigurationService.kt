@@ -17,14 +17,17 @@
  */
 package ch.komunumo.server.business.configuration.control
 
+import mu.KotlinLogging
+import java.io.File
 import java.io.FileInputStream
 import java.nio.file.Paths
 import java.util.Properties
 
 object ConfigurationService {
 
-    private const val configurationFilename = "komunumo.cfg"
-
+    private const val defaultConfigurationFilename = "komunumo.cfg"
+    private val logger = KotlinLogging.logger {}
+    private const val envVariableName = "komunumoconfig"
     private val properties: Properties
 
     init {
@@ -33,11 +36,40 @@ object ConfigurationService {
 
     private fun loadConfiguration(): Properties {
         val properties = Properties()
-        val file = Paths.get(System.getProperty("user.home"), ".komunumo", configurationFilename).toFile()
+        val filePath = System.getenv(envVariableName) ?: ""
+        val file: File = configFile(filePath)
+
+
         if (file.exists()) {
+            ConfigurationService.logger.info { "Using configuration: " + file.toString() }
+            println("Using configuration: " + file.toString())
+
             FileInputStream(file).use { stream -> properties.load(stream) }
+        } else {
+            ConfigurationService.logger.info { "No configuration file found under " + file.toString() }
+            println("No configuration file found under " + file.toString())
         }
+
         return properties
+    }
+
+    private fun configFile(filePath: String): File {
+        var filePathLocal = filePath
+        var file: File
+        if (!filePathLocal.contentEquals("")) {
+            file = Paths.get(filePathLocal).toFile()
+            if (!file.exists()) {
+                val workingDir = System.getProperty("user.dir")
+                filePathLocal = Paths.get(workingDir, filePathLocal).toString()
+            }
+
+        } else {
+            filePathLocal = Paths.get(System.getProperty("user.home"), ".komunumo", defaultConfigurationFilename).toString()
+
+        }
+
+        file = Paths.get(filePathLocal).toFile()
+        return file
     }
 
     private fun getString(key: String, default: String): String {
@@ -56,7 +88,11 @@ object ConfigurationService {
         return getString("token.signing.key", "")
     }
 
-    fun getTokenExpirationTime() : Int {
+    fun getDBFilePath(): String {
+        return getString("database.path", "")
+    }
+
+    fun getTokenExpirationTime(): Int {
         return getInt("token.expiration.time", 60 * 24) // in minutes, default = 24h
     }
 

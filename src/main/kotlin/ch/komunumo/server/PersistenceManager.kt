@@ -17,12 +17,15 @@
  */
 package ch.komunumo.server
 
+import ch.komunumo.server.business.configuration.control.ConfigurationService
 import mu.KotlinLogging
 import org.mapdb.DB
 import org.mapdb.DBMaker
 import org.mapdb.HTreeMap
 import org.mapdb.Serializer
+import java.io.File
 import java.io.Serializable
+import java.nio.file.Files
 import java.nio.file.Paths
 
 object PersistenceManager {
@@ -31,15 +34,46 @@ object PersistenceManager {
     private val logger = KotlinLogging.logger {}
 
     init {
-        val homeDir = System.getProperty("user.home")
-        val dbPath = Paths.get(homeDir, ".komunumo", "komunumo.db")
-        val dbFile = dbPath.toFile()
+        val dbFile = getDBFile()
         logger.info { "Using persistence store: $dbFile" }
         db = DBMaker.fileDB(dbFile)
                 .fileMmapEnableIfSupported()
                 .transactionEnable()
                 .closeOnJvmShutdown()
                 .make()
+
+
+    }
+
+    private fun getDBFile(): File {
+        var dbFilePathString = ConfigurationService.getDBFilePath()
+        if (dbFilePathString.isEmpty()) {
+            val homeDir = System.getProperty("user.home")
+
+            dbFilePathString = Paths.get(homeDir, ".komunumo", "komunumo.db").toString()
+        }
+        //        val dbPath = Paths.get(homeDir, ".komunumo", "komunumo.db")
+        val dbPath = Paths.get(dbFilePathString)
+        val file = dbPath.toFile()
+        if (file.isDirectory) {
+            throw  AccessDeniedException(file, null, "Expect full path to database file")
+        } else {
+            val pathSep = File.separator
+            val fileStart = dbFilePathString.lastIndexOf(pathSep)
+            val pathString = dbFilePathString.substring(0, fileStart)
+            val path = Paths.get(pathString)
+
+
+            if (Files.notExists(path)) {
+                logger.info { "Make directories: $pathString" }
+
+                path.toFile().mkdirs()
+
+            }
+        }
+
+
+        return dbPath.toFile()
     }
 
     @Suppress("UNCHECKED_CAST") // TODO talk to the mapDB developers for a better solution
