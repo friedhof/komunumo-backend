@@ -20,6 +20,7 @@ package ch.komunumo.server.business.configuration.control
 import mu.KotlinLogging
 import java.io.File
 import java.io.FileInputStream
+import java.io.FileNotFoundException
 import java.nio.file.Paths
 import java.util.Properties
 
@@ -27,7 +28,7 @@ object ConfigurationService {
 
     private const val defaultConfigurationFilename = "komunumo.cfg"
     private val logger = KotlinLogging.logger {}
-    private const val envVariableName = "komunumoconfig"
+    private const val environmentConfigurationFilename = "KOMUNUMOCONFIG"
     private val properties: Properties
 
     init {
@@ -36,24 +37,27 @@ object ConfigurationService {
 
     private fun loadConfiguration(): Properties {
         val properties = Properties()
-        val filePath = System.getenv(envVariableName) ?: ""
-        val file: File = configFile(filePath)
+        val file: File = configFile()
 
 
         if (file.exists()) {
-            ConfigurationService.logger.info { "Using configuration: " + file.toString() }
+            logger.info { "Using configuration: " + file.toString() }
             println("Using configuration: " + file.toString())
 
             FileInputStream(file).use { stream -> properties.load(stream) }
         } else {
-            ConfigurationService.logger.info { "No configuration file found under " + file.toString() }
-            println("No configuration file found under " + file.toString())
+//            logger.info { "No configuration file found under " + file.toString() }
+//            println("No configuration file found under " + file.toString())
+
+            throw FileNotFoundException("Configuration file not found at $file")
         }
 
         return properties
     }
 
-    private fun configFile(filePath: String): File {
+    private fun configFile(): File {
+        val filePath = System.getenv(environmentConfigurationFilename) ?: ""
+
         var filePathLocal = filePath
         var file: File
         if (!filePathLocal.contentEquals("")) {
