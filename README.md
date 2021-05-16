@@ -1,3 +1,6 @@
+:bangbang: | This repository was archived. The development of [Komunumo](https://komunumo.org) was restarted in 2021.
+---------- | ----------
+
 *Komunumo Backend*
 ==================
 
